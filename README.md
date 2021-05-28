@@ -19,6 +19,5 @@ https://github.com/watson-developer-cloud/python-sdk
 
 https://pypi.org/project/chempy/
 
-https://www.rdkit.org/docs/source/rdkit.Chem.PeriodicTable.html
-
+https://pypi.org/project/mendeleev/
 

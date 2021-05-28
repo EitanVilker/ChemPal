@@ -3,7 +3,8 @@ from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 API_KEY = "eV6IqpY5KaKIWRgw5XRk94hR6DC5fYCxaDX1nNIJz3iT"
-ASSISTANT_ID = "a1ceb56d-4515-40b2-896e-6033078034ea" 
+ASSISTANT_ID = "eb2dc57e-dc4d-475e-95bc-c7b646dbe09c" 
+
 authenticator = IAMAuthenticator(API_KEY)
 assistant = AssistantV2(
     version='2020-09-24',
@@ -31,10 +32,11 @@ message = assistant.message(
                     'deployment': 'myDeployment'
                 }
             }).get_result()
+    
 print(message["output"]["generic"][0]["text"])
+
 try:
     while True:
-
         input_text = input()
         message = assistant.message(
             ASSISTANT_ID,
@@ -50,8 +52,7 @@ try:
                 }
             }).get_result()
         print(json.dumps(message, indent=2))
-        print(message["output"]["generic"][0]["text"])
-
+        print(eval(message["output"]["entities"][0]["value"]+ message["output"]["entities"][1]["value"] + message["output"]["entities"][2]["value"] ))
 except KeyboardInterrupt:
     print("")
     print("Quit")

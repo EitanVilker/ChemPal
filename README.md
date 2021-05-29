@@ -44,6 +44,8 @@ PV = nRT
 4. R- L·atm/(mol·K)
 5. Temperature- Kelvin
 
+Output: The missing value, float
+
 *Atomic Weight*
 
 0. "Atomic Weight"
@@ -53,8 +55,19 @@ PV = nRT
 4. Element Symbol
 5. Repeat as needed
 
+Output: Total atomic weight of compound, float
+
+*Stoichiometry*
+0. "Stoichiometry"
+1. Dictionary object of reactants
+2. Dictionary object of products
+
+Output: Dictionary objects of reactants and products to integers
+
 *Multiplication*
 
 0. "Multiplication"
 1. Number
 2. Number
+
+Output: Float

@@ -22,6 +22,11 @@ https://pypi.org/project/chempy/
 https://pypi.org/project/mendeleev/
 
 
+### Example queries
+1. What is the atomic mass of calcium? 
+2. I want to know how much 1 + 2 is
+
+
 ### Workflow
 1. Get user input
 2. Pass input into Watson

@@ -1,5 +1,6 @@
 
 from mendeleev import *
+from chempy import *
 
 def calculate_output(variables):
 
@@ -33,7 +34,7 @@ def calculate_output(variables):
             difference -= float(variables[i + 2])
         return difference
     
-    elif calculation_type == "Atomic Mass":
+    elif calculation_type == "Atomic Weight":
         if len(variables) < 3:
             return None
         sum = 0
@@ -56,7 +57,7 @@ def calculate_output(variables):
         number = float(variables[3]) # moles
         R = 0.0821 # L·atm/(mol·K)
         temperature = float(variables[4]) # Kelvin
-        
+
         if variables[1] == "Unknown":
             return (number * R * temperature) / volume
         if variables[2] == "Unknown":
@@ -65,3 +66,24 @@ def calculate_output(variables):
             return (R * temperature) / (pressure * volume)
         if variables[4] == "Unknown":
             return (number * R) / (pressure * volume)
+
+    elif calculation_type == "Oxidations States":
+        if len(variables) < 2:
+            return None
+        element = element(variables[1])
+        return element.oxistates
+    
+    elif calculation_type == "Element Uses":
+        if len(variables) < 2:
+            return None
+        element = element(variables[1])
+        return element.uses
+
+    # Takes as input two dictionaries, reactants and products. Only keys in these dicts, 
+    # as values get assigned after stoichiometry is done
+    elif calculation_type == "Stoichiometry":
+        if len(variables) < 3:
+            return None
+        reactants, products = balance_stoichiometry(variables[1], variables[2])
+        return reactants, products
+        

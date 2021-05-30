@@ -1,0 +1,1068 @@
+{
+  "intents": [
+    {
+      "intent": "AskingChemicalCalculation",
+      "examples": [
+        {
+          "text": "How many moles of CO2 does it take to result in 4 moles of glucose in photosynthesis?",
+          "mentions": [
+            {
+              "entity": "Unit",
+              "location": [
+                50,
+                55
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                9,
+                14
+              ]
+            },
+            {
+              "entity": "Reaction",
+              "location": [
+                70,
+                84
+              ]
+            },
+            {
+              "entity": "ChemicalCompound",
+              "location": [
+                18,
+                21
+              ]
+            },
+            {
+              "entity": "ChemicalCompound",
+              "location": [
+                59,
+                66
+              ]
+            }
+          ]
+        },
+        {
+          "text": "If I have 10 grams of sodium and 5 grams of chlorine ions, how many moles of NaCl can I produce?",
+          "mentions": [
+            {
+              "entity": "Unit",
+              "location": [
+                13,
+                18
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                35,
+                40
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                68,
+                73
+              ]
+            },
+            {
+              "entity": "ion",
+              "location": [
+                53,
+                57
+              ]
+            },
+            {
+              "entity": "ChemicalElement",
+              "location": [
+                22,
+                28
+              ]
+            },
+            {
+              "entity": "ChemicalElement",
+              "location": [
+                44,
+                52
+              ]
+            },
+            {
+              "entity": "ChemicalCompound",
+              "location": [
+                77,
+                81
+              ]
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "AskingGas",
+      "examples": [
+        {
+          "text": "At 20 atm and 45 degrees K, what is the volume of 3 moles of gas?",
+          "mentions": [
+            {
+              "entity": "Unit",
+              "location": [
+                52,
+                57
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                17,
+                26
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                6,
+                9
+              ]
+            },
+            {
+              "entity": "Unit",
+              "location": [
+                40,
+                46
+              ]
+            },
+            {
+              "entity": "ChemicalCompound",
+              "location": [
+                61,
+                64
+              ]
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "AskingMass",
+      "examples": [
+        {
+          "text": "1"
+        },
+        {
+          "text": "What is the atomic mass of calcium?",
+          "mentions": [
+            {
+              "entity": "Property",
+              "location": [
+                19,
+                23
+              ]
+            },
+            {
+              "entity": "ChemicalElement",
+              "location": [
+                27,
+                34
+              ]
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "AskingMath",
+      "examples": [
+        {
+          "text": "100-35"
+        },
+        {
+          "text": "10/5"
+        },
+        {
+          "text": "1*1"
+        },
+        {
+          "text": "1+2="
+        },
+        {
+          "text": "2+3"
+        },
+        {
+          "text": "5-2"
+        },
+        {
+          "text": "how much is 1*1"
+        },
+        {
+          "text": "how much is 1 plus 1"
+        },
+        {
+          "text": "I want to ask Math"
+        },
+        {
+          "text": "I want to know the result of 1+2"
+        }
+      ],
+      "description": ""
+    }
+  ],
+  "entities": [
+    {
+      "entity": "ChemicalCompound",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "CO2",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "gas",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "glucose",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "NaCl",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "ChemicalElement",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "Al",
+          "synonyms": [
+            "Aluminium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "B",
+          "synonyms": [
+            "Boron"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Be",
+          "synonyms": [
+            "Beryllium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "C",
+          "synonyms": [
+            "Carbon"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Ca",
+          "synonyms": [
+            "Calcium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Cl",
+          "synonyms": [
+            "Chlorine"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Co",
+          "synonyms": [
+            "Cobalt"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Cu",
+          "synonyms": [
+            "Copper"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "F",
+          "synonyms": [
+            "Fluorine"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Fe",
+          "synonyms": [
+            "Iron"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "H",
+          "synonyms": [
+            "Hydrogen"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "He",
+          "synonyms": [
+            "Helium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "K",
+          "synonyms": [
+            "Potassium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Li",
+          "synonyms": [
+            "Lithium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Mg",
+          "synonyms": [
+            "Magnesium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Mn",
+          "synonyms": [
+            "Manganese"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "N",
+          "synonyms": [
+            "Nitrogen"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Na",
+          "synonyms": [
+            "Sodium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Ne",
+          "synonyms": [
+            "Neon"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Ni",
+          "synonyms": [
+            "Nickel"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "O",
+          "synonyms": [
+            "Oxygen"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "P",
+          "synonyms": [
+            "Phosphorus"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "S",
+          "synonyms": [
+            "Sulfur"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Si",
+          "synonyms": [
+            "Silicon"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Ti",
+          "synonyms": [
+            "Titanium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "V",
+          "synonyms": [
+            "Vanadium"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "Zn",
+          "synonyms": [
+            "Zinc"
+          ]
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "ion",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "ions",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "Operator",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "*",
+          "synonyms": [
+            "multiply",
+            "times"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "+",
+          "synonyms": [
+            "add",
+            "plus"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "-",
+          "synonyms": [
+            "minus",
+            "substrate"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "/",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "Property",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "mass",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "Reaction",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "oxidation states",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "photosynthesis",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sys-number",
+      "values": [],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sys-percentage",
+      "values": [],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "Unit",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "atm",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "degrees K",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "grams",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "moles",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "volume",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "dialog_nodes": [
+    {
+      "type": "standard",
+      "title": "Anything else",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I didn't understand. You can try rephrasing."
+              },
+              {
+                "text": "Can you reword your statement? I'm not understanding."
+              },
+              {
+                "text": "I didn't get your meaning."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Anything else",
+      "previous_sibling": "node_9_1622109832900",
+      "disambiguation_opt_out": true
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_9_1622206581223",
+      "context": {
+        "ChemicalElement": "@ChemicalElement"
+      },
+      "conditions": "@ChemicalElement",
+      "event_name": "input",
+      "dialog_node": "handler_10_1622206581238"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "mole?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_7_1622348971625",
+      "event_name": "focus",
+      "dialog_node": "handler_10_1622348971626",
+      "previous_sibling": "handler_2_1622348971626"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_2_1622253396345",
+      "context": {
+        "number": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_1_1622253396356"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_8_1622253407968",
+      "context": {
+        "Operator": "@Operator"
+      },
+      "conditions": "@Operator",
+      "event_name": "input",
+      "dialog_node": "handler_2_1622253407969"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_3_1622273747305",
+      "context": {
+        "pressure": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_2_1622273747320"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_7_1622348971625",
+      "context": {
+        "mole": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_2_1622348971626"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_1_1622349043591",
+      "context": {
+        "temp": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_2_1622349043593"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_2_1622356527704",
+      "context": {
+        "ChemicalCompound": "@ChemicalCompound"
+      },
+      "conditions": "@ChemicalCompound",
+      "event_name": "input",
+      "dialog_node": "handler_2_1622356527705"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "volume?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_8_1622273823889",
+      "event_name": "focus",
+      "dialog_node": "handler_3_1622273823890",
+      "previous_sibling": "handler_5_1622273823890"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_8_1622206607514",
+      "context": {
+        "number": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_4_1622206607516"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "pressure?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_3_1622273747305",
+      "event_name": "focus",
+      "dialog_node": "handler_4_1622273747320",
+      "previous_sibling": "handler_2_1622273747320"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "what is the first variable?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_2_1622253396345",
+      "event_name": "focus",
+      "dialog_node": "handler_5_1622253396356",
+      "previous_sibling": "handler_1_1622253396356"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_8_1622273823889",
+      "context": {
+        "volume": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_5_1622273823890"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_2_1622356527704",
+      "event_name": "focus",
+      "dialog_node": "handler_5_1622356527705",
+      "previous_sibling": "handler_2_1622356527705"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "what is the operator?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_8_1622253407968",
+      "event_name": "focus",
+      "dialog_node": "handler_6_1622253407969",
+      "previous_sibling": "handler_2_1622253407969"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_9_1622206581223",
+      "event_name": "focus",
+      "dialog_node": "handler_7_1622206581238",
+      "previous_sibling": "handler_10_1622206581238"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_6_1622253419839",
+      "context": {
+        "number_2": "@sys-number"
+      },
+      "conditions": "@sys-number",
+      "event_name": "input",
+      "dialog_node": "handler_8_1622253419840"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "temperature?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_1_1622349043591",
+      "event_name": "focus",
+      "dialog_node": "handler_8_1622349043593",
+      "previous_sibling": "handler_2_1622349043593"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "how many moles?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_8_1622206607514",
+      "event_name": "focus",
+      "dialog_node": "handler_9_1622206607516",
+      "previous_sibling": "handler_4_1622206607516"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "what is the second variable?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "slot_6_1622253419839",
+      "event_name": "focus",
+      "dialog_node": "handler_9_1622253419840",
+      "previous_sibling": "handler_8_1622253419840"
+    },
+    {
+      "type": "frame",
+      "title": "AskingMath",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I am calculating...."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#AskingMath",
+      "digress_in": "not_available",
+      "dialog_node": "node_1_1622113623498",
+      "digress_out": "allow_all",
+      "previous_sibling": "node_9_1622206501136",
+      "digress_out_slots": "not_allowed"
+    },
+    {
+      "type": "standard",
+      "title": "AskingChemicalCalculation",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I am glad to help you answer this question"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#AskingChemicalCalculation",
+      "dialog_node": "node_9_1622109832900",
+      "previous_sibling": "node_1_1622113623498"
+    },
+    {
+      "type": "frame",
+      "title": "AskingMass",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "I am calculating..."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "#AskingMass",
+      "digress_in": "not_available",
+      "dialog_node": "node_9_1622206478480",
+      "digress_out": "allow_all",
+      "previous_sibling": "Welcome",
+      "digress_out_slots": "not_allowed"
+    },
+    {
+      "type": "frame",
+      "title": "AskingGas",
+      "conditions": "#AskingGas",
+      "dialog_node": "node_9_1622206501136",
+      "previous_sibling": "node_9_1622206478480"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206501136",
+      "variable": "$temp",
+      "dialog_node": "slot_1_1622349043591",
+      "previous_sibling": "slot_7_1622348971625"
+    },
+    {
+      "type": "slot",
+      "parent": "node_1_1622113623498",
+      "variable": "$number",
+      "dialog_node": "slot_2_1622253396345"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206478480",
+      "variable": "$ChemicalCompound",
+      "dialog_node": "slot_2_1622356527704",
+      "previous_sibling": "slot_8_1622206607514"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206501136",
+      "variable": "$pressure",
+      "dialog_node": "slot_3_1622273747305"
+    },
+    {
+      "type": "slot",
+      "parent": "node_1_1622113623498",
+      "variable": "$number_2",
+      "dialog_node": "slot_6_1622253419839",
+      "previous_sibling": "slot_8_1622253407968"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206501136",
+      "variable": "$mole",
+      "dialog_node": "slot_7_1622348971625",
+      "previous_sibling": "slot_8_1622273823889"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206478480",
+      "variable": "$number",
+      "dialog_node": "slot_8_1622206607514",
+      "previous_sibling": "slot_9_1622206581223"
+    },
+    {
+      "type": "slot",
+      "parent": "node_1_1622113623498",
+      "variable": "$Operator",
+      "dialog_node": "slot_8_1622253407968",
+      "previous_sibling": "slot_2_1622253396345"
+    },
+    {
+      "type": "slot",
+      "parent": "node_9_1622206501136",
+      "variable": "$volume",
+      "dialog_node": "slot_8_1622273823889",
+      "previous_sibling": "slot_3_1622273747305"
+    },
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_9_1622206478480",
+      "variable": "$ChemicalElement",
+      "dialog_node": "slot_9_1622206581223"
+    },
+    {
+      "type": "standard",
+      "title": "Welcome",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello, I am ChemPal. How can I help you?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "welcome",
+      "dialog_node": "Welcome"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "off_topic": {
+      "enabled": true
+    },
+    "disambiguation": {
+      "prompt": "Did you mean:",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "None of the above"
+    },
+    "system_entities": {
+      "enabled": true
+    },
+    "human_agent_assist": {
+      "prompt": "Did you mean:"
+    },
+    "intent_classification": {
+      "training_backend_version": "v2"
+    },
+    "spelling_auto_correct": true
+  },
+  "learning_opt_out": false,
+  "name": "Chempal",
+  "language": "en",
+  "description": ""
+}

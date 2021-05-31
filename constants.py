@@ -12,9 +12,10 @@ Measurement = namedtuple('Measurement', ['value', 'units'])
 
 # air pressure
 NMOLS = 'n_moles'
-PRESSURE = 'pressure'
 TEMPERATURE = 'temperature'
 VOLUME = 'volume'
+
+PRESSURE = 'pressure'
 ATM = 'atm'
 KPA = 'kpa'
 MMHG = 'mmhg'

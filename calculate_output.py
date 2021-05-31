@@ -75,7 +75,7 @@ def handle_elem_uses(variables):
     return element.uses
 
 
-def handle_asking_gas(variables):
+def handle_air_pressure(variables):
     """
     Handler for `pv=nrt` calculations. 
 
@@ -86,23 +86,26 @@ def handle_asking_gas(variables):
     returns:
         string containing air presure calculation output
     """
-    # TODO Update to use dict of labelled variables with units
     # TODO Add code to convert units
-    if len(variables < 4):
+    if c.PRESSURE not in variables 
+            or c.VOLUME not in variables  
+            or c.NMOLS not in variables 
+            or c.TEMPERATURE not in variables:
         return None
-    pressure = float(variables[0]) # atm
-    volume = float(variables[1]) # liters
-    number = float(variables[2]) # moles
+        
+    pressure = conv_pressure_to_atm(variables[c.PRESSURE]) # atm
+    volume = conv_volume_to_liters(variables[c.VOLUME]) # liters
+    number = conv_amount_to_moles(variables[c.NMOLS]) # moles
     R = 0.0821 # L·atm/(mol·K)
-    temperature = float(variables[3]) # Kelvin
+    temperature = conv_temp_to_kelvin(variables[c.TEMPERATURE]) # Kelvin
 
-    if variables[0] == "unknown":
+    if pressure == "unknown":
         return (number * R * temperature) / volume
-    if variables[1] == "unknown":
+    if volume == "unknown":
         return (number * R * temperature) / pressure
-    if variables[2] == "unknown":
+    if number == "unknown":
         return (R * temperature) / (pressure * volume)
-    if variables[3] == "unknown":
+    if temperature == "unknown":
         return (number * R) / (pressure * volume)
 
 
@@ -136,6 +139,7 @@ INTENTS_TO_FNS = {
     c.ATOMIC_WEIGHT: handle_atomic_weight,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
+    c.AIR_PRESSURE: handle_air_pressure,
     c.STOICH: handle_stoich
 }
 

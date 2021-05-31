@@ -4,9 +4,12 @@ from pyparsing import ParseException
 from sympy.core.function import BadArgumentsError
 
 """
-Chemical format utility for CS89 final project. Provides functions which
-take strings representing chemicals (either by name or by chemical formula),
-and return Python objects representing those chemicals.
+Chemical format utility for CS89 final project. Provides both parsing functions
+and conversion functions. 
+
+PARSING FUNCTIONS
+The parsing functions take strings representing chemicals (either by name or 
+by chemical formula), and return Python objects representing those chemicals.
 
 PubChemPy format:
 - Provides API for searching compounds by name in a large, publicly available
@@ -18,8 +21,15 @@ PubChemPy format:
 ChemPy format:
 - Provides API for initialization from chemical formula only.
 - Can perform various calculations if inputs are given in ChemPy format.
+
+CONVERSION FUNCTIONS
+The conversion functions in this file take in measurements (see 
+constants.py/Measurement) which have a value and a unit, and convert the
+measurement to the desired unit. This functionality is currently primarily used
+by the air pressure calculation handler.
 """
 
+## PARSING FUNCTIONS
 def parse_chemical_name(name, output):
     """
     Parses a chemical name provided as a string into the chosen output.
@@ -105,3 +115,33 @@ def parse_chemical(chemical, output='chempy'):
             return parse_chemical_name(chemical, output)
         except BadArgumentsError:  # thrown by our code if searching for the compound name in pubchempy fails
             raise ParseException(f'Unable to parse string {chemical}')
+
+
+## CONVERSION FUNCTIONS
+def conv_pressure_to_atm(pressure):
+    # helper function to convert pressure measurements (see constants.py/Measurement) to atm
+    if pressure.units == c.ATM:
+        return float(pressure.value)
+
+    elif pressure.units == c.KPA:
+        # return pressure converted from kilopascals to atmospheres
+        pass
+
+    elif pressure.units == c.MMHG:
+        # return pressure converted from mm mercury to atmospheres
+        pass
+
+
+def conv_volume_to_liters():
+    # helper function to convert volume measurements (see constants.py/Measurement) to liters
+    pass
+
+
+def conv_amount_to_moles():
+    # helper function to convert count or amount measurements (see constants.py/Measurement) to number of moles
+    pass
+
+
+def conv_temp_to_kelvin():
+    # helper function to convert temperature measurements (see constants.py/Measurement) to kelvin
+    pass

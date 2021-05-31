@@ -9,6 +9,11 @@ def calculate_output(result):
     calculation_type = result["intent"] # string
     variables = result["variables"] # list
 
+    if calculation_type == "Arithmetic":
+        if 'expression' not in variables:
+            return None
+        return eval(variables['expression'])
+
     if calculation_type == "Multiplication":
         if len(variables) != 3:
             return None
@@ -99,6 +104,12 @@ user_inputs = {
     'intent': 'Atomic Weight',
     'variables': {
         'chemical': 'glucose'
+    }
+}
+user_inputs = {
+    'intent': 'Arithmetic',
+    'variables': {
+        'expression': '4 * 7 - 13 ^ 2'.replace('^', '**') # TODO Convert ^ to ** in expressions
     }
 }
 

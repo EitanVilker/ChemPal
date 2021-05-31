@@ -53,34 +53,28 @@ def handle_stoich(variables):
     reactants, products = balance_stoichiometry(variables[0], variables[1])
     return reactants, products
 
+# helper variable to easily match intents to their handler functions
+# listed in order that they appear in this file
+INTENTS_TO_FNS = {
+    c.MATH: handle_arithmetic,
+    c.ATOMIC_WEIGHT: handle_atomic_weight,
+    c.OX_STATES: handle_ox_states,
+    c.ELEM_USES: handle_elem_uses,
+    c.STOICH: handle_stoich
+}
+
+def handle_query(intent, variables):
+    if intent not in INTENTS_TO_FNS:
+        raise NotImplementedError(f'Intent {intent} is not recognized')
+
+    return INTENTS_TO_FNS[intent](variables)
+
 # Input result is a dict
 def calculate_output(result):
-    calculation_type = result["intent"] # string
-    variables = result["variables"] # list
+    intent = result["intent"] # string
+    variables = result["variables"] # format depends on intent
 
-    if calculation_type == c.MATH:
-        return handle_arithmetic(variables)
-    
-    # Takes as input a name or formula of a chemical
-    elif calculation_type == c.ATOMIC_WEIGHT:
-        return handle_atomic_weight(variables)
-
-    # Takes as input a single string, an element
-    elif calculation_type == c.OX_STATES:
-        return handle_ox_states(variables)
-    
-    # Takes as input a single string, an element
-    elif calculation_type == c.ELEM_USES:
-        return handle_elem_uses(variables)
-    
-    # Takes as input four floats (can be in string form)
-    elif calculation_type == "AskingGas":
-        return handle_asking_gas(variables)
-
-    # Takes as input two dictionaries, reactants and products. Only keys in these dicts, 
-    # as values get assigned after stoichiometry is done
-    elif calculation_type == c.STOICH:
-        return handle_stoich(variables)
+    return handle_query(intent, variables)
         
 user_inputs = {
     'intent': c.ATOMIC_WEIGHT,

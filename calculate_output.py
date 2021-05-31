@@ -59,13 +59,13 @@ def calculate_output(result):
         R = 0.0821 # L·atm/(mol·K)
         temperature = float(variables[3]) # Kelvin
 
-        if variables[0] == "Unknown":
+        if variables[0] == "unknown":
             return (number * R * temperature) / volume
-        if variables[1] == "Unknown":
+        if variables[1] == "unknown":
             return (number * R * temperature) / pressure
-        if variables[2] == "Unknown":
+        if variables[2] == "unknown":
             return (R * temperature) / (pressure * volume)
-        if variables[3] == "Unknown":
+        if variables[3] == "unknown":
             return (number * R) / (pressure * volume)
 
     # Takes as imput a single string, an element

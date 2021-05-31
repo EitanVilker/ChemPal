@@ -2,6 +2,7 @@ import json
 from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from calculate_output import calculate_output
+from handler import handle
 
 API_KEY = "eV6IqpY5KaKIWRgw5XRk94hR6DC5fYCxaDX1nNIJz3iT"
 ASSISTANT_ID = "eb2dc57e-dc4d-475e-95bc-c7b646dbe09c" 
@@ -35,11 +36,16 @@ message = assistant.message(
             }).get_result()
     
 print(message["output"]["generic"][0]["text"])
-
+ 
 try:
+    result = {}
+    result["intent"] = ""
+    result["variables"] = {}
     while True:
-        result = {}
+        ### user input
         input_text = input()
+
+        ### get response from Watson assistant
         message = assistant.message(
             ASSISTANT_ID,
             session["session_id"],
@@ -53,22 +59,41 @@ try:
                     'deployment': 'myDeployment'
                 }
             }).get_result()
+
+        ### print the response
+        # print(json.dumps(message, indent=2))
+
+        ### retrieve the information from the response
         output = message["output"]
         if output:
-            if output["intents"] and len(output["intents"]) > 0:
+            if "intents" in output and len(output["intents"]) > 0:
                 result["intent"] = output["intents"][0]["intent"]
-            if output["generic"] and len(output["generic"]) > 0:
+        if "context" in message:
+            if "skills" in message["context"] and "main skill" in message["context"]["skills"] and "user_defined" in message["context"]["skills"]["main skill"]:
+                result["variables"] = message["context"]["skills"]["main skill"]["user_defined"]
+        
+        ### post-process the information to make the format consistent with our calculator
+        post_processed_result = handle(result)
+        # print(result)
+        # print(post_processed_result)
+
+        #### Parse the result here
+
+        ### Calculate output
+        # calculation_output = calculate_output(new_result)
+        # if output:
+        #     print(output)
+
+        ### clear variables if the calculation is completed
+        if output:
+            if "generic" in output and len(output["generic"]) > 0:
                 if output["generic"][0]["response_type"] and output["generic"][0]["response_type"] == "text":
                     print(output["generic"][0]["text"])
-        if message["context"]:
-            if message["context"]["skills"] and message["context"]["skills"]["main skill"] and message["context"]["skills"]["main skill"]["user_defined"]:
-                result["variables"] = message["context"]["skills"]["main skill"]["user_defined"]
-        # print(result)
-        output = calculate_output(result)
-        if output:
-            print(output)
+                    if "calculating" in output["generic"][0]["text"]:
+                        result = {}
+                        result["intent"] = ""
+                        result["variables"] = {}
 
-        # print(json.dumps(message, indent=2))
         
 except KeyboardInterrupt:
     print("")

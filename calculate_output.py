@@ -41,11 +41,10 @@ def calculate_output(result):
         current_multiplier = 1
         e = "H"
         for i in range(len(variables)):
-            if i % 2 == 0:
-                current_multiplier = int(variables[i])
+            if i % 2 == 1:
+                sum += int(variables[i]) * e.atomic_weight
             else:
                 e = element(variables[i])
-                sum += current_multiplier * e.atomic_weight
         return sum
     
     # Takes as input four floats (can be in string form)

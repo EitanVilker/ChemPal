@@ -32,7 +32,9 @@ def parse_chemical_name(name, format):
         Python object in chosen format representing the chemical
     """
     compounds = get_compounds(name, 'name')
-    if len(compounds == 0):
+    if compounds:
+        compound = compounds[0]
+    else:
         raise BadArgumentsError(f'Failed to find a compound with name {name}')
 
     if format == 'pubchempy':
@@ -70,6 +72,7 @@ def parse_chemical_formula(formula, format):
         # I believe the pubchempy functionality provides as much information
         # as Mendeleev while also supporting compounds
         pass
+
 
 def parse_chemical(chemical, format='chempy'):
     """

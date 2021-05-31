@@ -1,6 +1,24 @@
 ## variable names
-CHEMICAL = 'chemical'
+# arithmetic
+from collections import namedtuple
+
+
 EXPR = 'expression'
+
+# general chemistry
+CHEMICAL = 'chemical'
+ELEMENT = 'element'
+Measurement = namedtuple('Measurement', ['value', 'units'])
+
+# air pressure
+NMOLS = 'n_moles'
+PRESSURE = 'pressure'
+TEMPERATURE = 'temperature'
+VOLUME = 'volume'
+
+# stoichiometry
+REAGENTS = 'reagents'
+PRODUCTS = 'products'
 
 ## query types
 ATOMIC_WEIGHT = 'atomic_weight'

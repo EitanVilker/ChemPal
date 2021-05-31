@@ -20,13 +20,13 @@ ChemPy format:
 - Can perform various calculations if inputs are given in ChemPy format.
 """
 
-def parse_chemical_name(name, format):
+def parse_chemical_name(name, output):
     """
-    Parses a chemical name provided as a string into the chosen format.
+    Parses a chemical name provided as a string into the chosen output.
 
     parameters:
         name -- string containing the name of the chemical
-        format -- string stating the output type (currently either chempy or pubchempy)
+        output -- string stating the output type (currently either chempy or pubchempy)
 
     returns:
         Python object in chosen format representing the chemical
@@ -37,58 +37,59 @@ def parse_chemical_name(name, format):
     else:
         raise BadArgumentsError(f'Failed to find a compound with name {name}')
 
-    if format == 'pubchempy':
+    if output == 'pubchempy':
         return compound
 
-    elif format == 'chempy':
-        print(compound.molecular_formula)
+    elif output == 'chempy':
         substance = chempy.Substance.from_formula(compound.molecular_formula)
         return substance
 
-    elif format == 'mendeleev':
+    elif output == 'mendeleev':
         # I believe the pubchempy functionality provides as much information
         # as Mendeleev while also supporting compounds
         pass
 
-    elif format == 'atomic_weight':
-        return compound.molecular_weight
+    elif output == 'atomic_weight':
+        substance = chempy.Substance.from_formula(compound.molecular_formula)
+        return substance.molar_mass()
 
 
-def parse_chemical_formula(formula, format):
+def parse_chemical_formula(formula, output):
     """
     Parses a string containing a chemical formula into the chosen format.
 
     parameters:
         formula -- string representing a chemical formula, such as H2O
-        format -- string stating the output type (currently either chempy or pubchempy)
+        output -- string stating the output type
     
     returns:
         Python object in chosen format representing the chemical
     """
-    if format == 'chempy':
+    if output == 'chempy':
         return chempy.Substance.from_formula(formula)
 
-    elif format == 'pubchempy':
+    elif output == 'pubchempy':
         return get_compounds(formula, 'formula')[0]
 
-    elif format == 'mendeleev':
+    elif output == 'mendeleev':
         # I believe the pubchempy functionality provides as much information
         # as Mendeleev while also supporting compounds
         pass
 
-    elif format == 'atomic_weight':
+    elif output == 'atomic_weight':
         substance = chempy.Substance.from_formula(formula)
-        return substance.molar_mass
+        return substance.molar_mass()
 
 
-def parse_chemical(chemical, format='chempy'):
+def parse_chemical(chemical, output='chempy'):
     """
     Parses a string representing a chemical. The chemical string must be either
     a chemical formula or a common name for a chemical.
 
     parameters:
         chemical -- string representing a chemical
-        format -- string stating the output type (currently either chempy or pubchempy)
+        output -- string stating the output datatype (currently either chempy, 
+                    pubchempy, or atomic weight)
 
     returns:
         chemical represented as a Python object in the chosen format
@@ -97,10 +98,10 @@ def parse_chemical(chemical, format='chempy'):
         pyparsing.ParseException (following chempy here) if we fail to parse the chemical string
     """
     try: 
-        return parse_chemical_formula(chemical, format)
+        return parse_chemical_formula(chemical, output)
     
     except ParseException:  # thrown by chempy if it fails to parse a chemical formula
         try:
-            parse_chemical_name(chemical, format)
+            return parse_chemical_name(chemical, output)
         except BadArgumentsError:  # thrown by our code if searching for the compound name in pubchempy fails
             raise ParseException(f'Unable to parse string {chemical}')

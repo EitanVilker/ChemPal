@@ -1,6 +1,8 @@
 
+from enum import Enum
 from mendeleev import *
 from chempy import *    
+from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
 
 # Input result is a dict
 def calculate_output(result):
@@ -35,18 +37,21 @@ def calculate_output(result):
     
     # Takes as input a list of alternating ints and strings
     elif calculation_type == "Atomic Weight":
-        if len(variables) < 2:
+        if 'chemical' not in variables:
             return None
-        sum = 0
-        current_multiplier = 1
-        e = "H"
-        for i in range(len(variables)):
-            if i % 2 == 0:
-                current_multiplier = int(variables[i])
-            else:
-                e = element(variables[i])
-                sum += current_multiplier * e.atomic_weight
-        return sum
+        
+        return parse_chemical(variables['chemical'], output='atomic_weight')
+        
+        # sum = 0
+        # current_multiplier = 1
+        #
+        # for i in range(len(variables)):
+        #     if i % 2 == 0:
+        #         current_multiplier = int(variables[i])
+        #     else:
+        #         e = element(variables[i])
+        #         sum += current_multiplier * e.atomic_weight
+        # return sum
     
     # Takes as input four floats (can be in string form)
     elif calculation_type == "AskingGas":
@@ -68,7 +73,7 @@ def calculate_output(result):
         if variables[3] == "unknown":
             return (number * R) / (pressure * volume)
 
-    # Takes as imput a single string, an element
+    # Takes as input a single string, an element
     elif calculation_type == "Oxidations States":
         if len(variables) < 1:
             return None
@@ -90,3 +95,11 @@ def calculate_output(result):
         reactants, products = balance_stoichiometry(variables[0], variables[1])
         return reactants, products
         
+user_inputs = {
+    'intent': 'Atomic Weight',
+    'variables': {
+        'chemical': 'glucose'
+    }
+}
+
+print(calculate_output(user_inputs))

@@ -1,18 +1,20 @@
+import constants as c
 
 from enum import Enum
 from mendeleev import *
 from chempy import *    
 from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
 
+
 # Input result is a dict
 def calculate_output(result):
     calculation_type = result["intent"] # string
     variables = result["variables"] # list
 
-    if calculation_type == "Arithmetic":
-        if 'expression' not in variables:
+    if calculation_type == c.MATH:
+        if c.EXPR not in variables:
             return None
-        return eval(variables['expression'])
+        return eval(variables[c.EXPR])
 
     if calculation_type == "Multiplication":
         if len(variables) != 3:
@@ -41,11 +43,11 @@ def calculate_output(result):
         return difference
     
     # Takes as input a list of alternating ints and strings
-    elif calculation_type == "Atomic Weight":
-        if 'chemical' not in variables:
+    elif calculation_type == c.ATOMIC_WEIGHT:
+        if c.CHEMICAL not in variables:
             return None
         
-        return parse_chemical(variables['chemical'], output='atomic_weight')
+        return parse_chemical(variables[c.CHEMICAL], output='atomic_weight')
         
         # sum = 0
         # current_multiplier = 1
@@ -79,14 +81,14 @@ def calculate_output(result):
             return (number * R) / (pressure * volume)
 
     # Takes as input a single string, an element
-    elif calculation_type == "Oxidations States":
+    elif calculation_type == c.OX_STATES:
         if len(variables) < 1:
             return None
         element = element(variables[0])
         return element.oxistates
     
     # Takes as input a single string, an element
-    elif calculation_type == "Element Uses":
+    elif calculation_type == c.ELEM_USES:
         if len(variables) < 1:
             return None
         element = element(variables[0])
@@ -94,20 +96,20 @@ def calculate_output(result):
 
     # Takes as input two dictionaries, reactants and products. Only keys in these dicts, 
     # as values get assigned after stoichiometry is done
-    elif calculation_type == "Stoichiometry":
+    elif calculation_type == c.STOICH:
         if len(variables) < 2:
             return None
         reactants, products = balance_stoichiometry(variables[0], variables[1])
         return reactants, products
         
 user_inputs = {
-    'intent': 'Atomic Weight',
+    'intent': c.ATOMIC_WEIGHT,
     'variables': {
         'chemical': 'glucose'
     }
 }
 user_inputs = {
-    'intent': 'Arithmetic',
+    'intent': c.MATH,
     'variables': {
         'expression': '4 * 7 - 13 ^ 2'.replace('^', '**') # TODO Convert ^ to ** in expressions
     }

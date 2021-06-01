@@ -19,17 +19,18 @@ POUNDS = 'pounds'
 
 PRESSURE = 'pressure'
 ATM = 'atm'
-KPA = 'kpa'
+KPA = 'kPa'
+PA = "Pa"
 MMHG = 'mmhg'
 
 TEMPERATURE = 'temperature'
-KELVIN = 'kelvin'
-CELSIUS = 'celsius'
-FARENHEIT = 'farenheit'
+KELVIN = 'K'
+CELSIUS = 'C'
+FARENHEIT = 'F'
 
 VOLUME = 'volume'
-LITERS = 'liters'
-MILILITERS = 'ml'
+LITERS = 'L'
+MILILITERS = 'mL'
 GALLONS = 'gallons'
 
 # stoichiometry

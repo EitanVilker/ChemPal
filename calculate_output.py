@@ -87,9 +87,9 @@ def handle_air_pressure(variables):
         string containing air presure calculation output
     """
     # TODO Add code to convert units
-    if c.PRESSURE not in variables 
-            or c.VOLUME not in variables  
-            or c.NMOLS not in variables 
+    if c.PRESSURE not in variables \
+            or c.VOLUME not in variables \
+            or c.NMOLS not in variables \
             or c.TEMPERATURE not in variables:
         return None
         

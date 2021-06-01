@@ -37,7 +37,7 @@ REAGENTS = 'reagents'
 PRODUCTS = 'products'
 
 ## query types
-AIR_PRESSURE - 'air_pressure'
+AIR_PRESSURE = 'air_pressure'
 ATOMIC_WEIGHT = 'atomic_weight'
 ELEM_USES = 'element_uses'
 MATH = 'arithmetic'

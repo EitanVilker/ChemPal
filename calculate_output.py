@@ -134,8 +134,8 @@ def handle_ideal_gas(variables):
         elif temperature.units == c.FARENHEIT:  t = (temperature.value - 32.) * 5./9. + c.C_TO_K # Unfortunately has to be hard-coded
         elif temperature.units == c.KELVIN:     t = temperature.value
 
-    if n_mols.value != c.UNK:
-        n = n_mols.value
+    if n_mols != c.UNK:
+        n = n_mols
 
     if pressure.value == c.UNK:
         p = (n * R * t) / v
@@ -158,8 +158,7 @@ def handle_ideal_gas(variables):
         elif temperature.units == c.KELVIN:     return t
         else:                                   return None
 
-    if n_mols.value == c.UNK:
-        print(temperature)
+    if n_mols == c.UNK:
         return (R * t) / (p * v)
 
     return None
@@ -179,7 +178,7 @@ def handle_stoich(variables):
     """
     if c.REAGENTS not in variables or c.PRODUCTS not in variables:
         return None
-    
+    print(variables[c.REAGENTS])
     # prepare user input for use in chempy by using parse_chemical to standardize format
     reagents = set(parse_chemical(reagent, output='chempy').name
                 for reagent in variables[c.REAGENTS])

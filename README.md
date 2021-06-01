@@ -23,9 +23,37 @@ https://pypi.org/project/mendeleev/
 
 
 ### Example queries
-1. What is the atomic mass of calcium? 
-2. I want to know how much 1 + 2 is
+1.What are the possible oxidation states of manganese?
+2.What is the element uses of manganese?
+3.What is the atomic mass of H2O?
+4.Stoichiometry calculation
+* Q: what is the first reactant?
+	A: H2
+* Q: what is the second reactant?
+	A: O2
+* Q: What is the product?
+	A: H2O
+* Output: 2 H2 + 1 O2 ==> 2 H2O
+* Q: What is the other product?
+    A: None
+* Output: 2 H2 + 1 O2 ==> 2 H2O
 
+5.Ideal gas calculation
+* Q:What is the pressure (unitless)?
+    A:100
+* Q:What is the unit of pressure?
+    A:atm
+* Q:What is the volume (unitless)?
+    A:20
+* Q:What is the unit of volume?
+    A:liter
+* Q:What is the temperature (unitless)?
+    A:25
+* Q:What is the unit of temperature?
+    A:celsius
+* Q:What is the number of moles?
+    A:unknown
+* Output: 0.012239057499999999
 
 ### Workflow
 1. Get user input
@@ -76,3 +104,4 @@ Output: Dictionary objects of reactants and products to integers
 2. Number
 
 Output: Float
+

@@ -73,27 +73,29 @@ try:
             if "skills" in message["context"] and "main skill" in message["context"]["skills"] and "user_defined" in message["context"]["skills"]["main skill"]:
                 result[c.VARS] = message["context"]["skills"]["main skill"]["user_defined"]
         
-        ### post-process the information to make the format consistent with our calculator
-        post_processed_result = format(result)
+        ### format the information
+        formatted_result = format(result)
         # print(result)
-        # print(post_processed_result)
+        # print(formatted_result)
 
         #### Parse the result here
 
         ### Calculate output
-        # calculation_output = calculate_output(new_result)
-        # if output:
-        #     print(output)
+        if formatted_result:
+            calculation_output = calculate_output(formatted_result)
+            if calculation_output:
+                print(calculation_output)
 
         ### clear variables if the calculation is completed
         if output:
             if "generic" in output and len(output["generic"]) > 0:
                 if output["generic"][0]["response_type"] and output["generic"][0]["response_type"] == "text":
-                    print(output["generic"][0]["text"])
                     if "calculating" in output["generic"][0]["text"]:
                         result = {}
                         result[c.INTENT] = ""
                         result[c.VARS] = {}
+                    else:
+                        print(output["generic"][0]["text"])
 
         
 except KeyboardInterrupt:

@@ -75,7 +75,7 @@ def handle_elem_uses(variables):
     return element.uses
 
 
-def handle_asking_gas(variables):
+def handle_air_pressure(variables):
     """
     Handler for `pv=nrt` calculations. 
 
@@ -86,40 +86,38 @@ def handle_asking_gas(variables):
     returns:
         string containing air presure calculation output
     """
-    # TODO Update to use dict of labelled variables with units
     # TODO Add code to convert units
-    if len(variables < 4):
+    if c.PRESSURE not in variables \
+            or c.VOLUME not in variables \
+            or c.NMOLS not in variables \
+            or c.TEMPERATURE not in variables:
         return None
     pressure = 0
     volume = 0
     number = 0
     temperature = 0
-    pressure = float(variables[0]) # atm
-    volume = float(variables[1]) # liters
-    number = float(variables[2]) # moles
     R = 0.0821 # L·atm/(mol·K)
-    temperature = float(variables[3]) # Kelvin
 
     if variables[0] != "unknown":
-        if variables[1] == "Pa":
+        if variables[1] == c.PA:
             pressure = variables[0] * c.PA_TO_ATM
-        elif variables[1] == "kPa":
+        elif variables[1] == c.KPA:
             pressure = variables[0] * c.KPA_TO_ATM
-        elif variables[1] == "atm":
+        elif variables[1] == c.ATM:
             pressure = variables[0]
     
     if variables[2] != "unknown":
-        if variables[3] == "mL":
+        if variables[3] == c.MILILITERS:
             volume = variables[2] * c.ML_TO_L
-        elif variables[3] == "L":
+        elif variables[3] == c.LITERS:
             volume = variables[2]
     
     if variables[4] != "unknown":
-        if variables[5] == "C":
+        if variables[5] == c.CELSIUS:
             temperature = variables[4] + c.C_TO_K
-        elif variables[5] == "F":
+        elif variables[5] == c.FARENHEIT:
             temperature = (variables[4] - 32) * 5/9 + c.C_TO_K # Unfortunately has to be hard-coded
-        elif variables[5] == "K":
+        elif variables[5] == c.KELVIN:
             temperature = variables[4]
 
     if variables[6] != "unknown":
@@ -127,29 +125,29 @@ def handle_asking_gas(variables):
 
     if variables[0] == "unknown":
         pressure = (number * R * temperature) / volume
-        if variables[1] == "Pa":
+        if variables[1] == c.PA:
             return pressure * 1/c.PA_TO_ATM
-        if variables[1] == "kPa":
+        if variables[1] == c.KPA:
             return pressure * 1/c.KPA_TO_ATM
-        if variables[1] == "atm":
+        if variables[1] == c.ATM:
             return pressure
         return None
 
     if variables[2] == "unknown":
         volume = (number * R * temperature) / pressure
-        if variables[3] == "mL":
+        if variables[3] == c.MILILITERS:
             return volume * 1 / c.ML_TO_L
-        if variables[3] == "L":
+        if variables[3] == c.LITERS:
             return volume
         return None
 
     if variables[4] == "unknown":
         temperature = (number * R) / (pressure * volume)
-        if variables[5] == "C":
+        if variables[5] == c.CELSIUS:
             return temperature - c.C_TO_K
-        if variables[5] == "F":
+        if variables[5] == c.FARENHEIT:
             return (temperature - c.C_TO_K) * 9/5 + 32
-        if variables[5] == "K":
+        if variables[5] == c.KELVIN:
             return temperature
         return None
     if variables[6] == "unknown":
@@ -187,6 +185,7 @@ INTENTS_TO_FNS = {
     c.ATOMIC_WEIGHT: handle_atomic_weight,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
+    c.AIR_PRESSURE: handle_air_pressure,
     c.STOICH: handle_stoich
 }
 

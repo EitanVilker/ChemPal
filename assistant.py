@@ -73,7 +73,7 @@ try:
                 result["variables"] = message["context"]["skills"]["main skill"]["user_defined"]
         
         ### post-process the information to make the format consistent with our calculator
-        post_processed_result = handle(result)
+        post_processed_result = format(result)
         # print(result)
         # print(post_processed_result)
 

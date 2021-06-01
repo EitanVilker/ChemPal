@@ -56,7 +56,8 @@ def handle_atomic_weight(variables):
     if c.CHEMICAL not in variables:
         return None
     
-    return parse_chemical(variables[c.CHEMICAL], output='atomic_weight')
+    substance = parse_chemical(variables[c.CHEMICAL], output='chempy')
+    return f'{substance.name} has a molar mass of {substance.molar_mass()}'
 
 
 def handle_ox_states(variables):
@@ -73,7 +74,19 @@ def handle_ox_states(variables):
     if len(variables) < 1:
         return None
     elem = element(variables[c.ELEMENT].title())
-    return elem.oxistates
+
+    if len(elem.oxistates) == 0:
+        return None
+
+    response = f'{elem.name} has oxidation states (in order of stability): '
+    for ox in elem.oxistates:
+        if ox == elem.oxistates[-1]:    
+            response += 'and '
+        if ox > 0:
+            response += '+'
+        response += f'{ox}, '
+        
+    return response [:-2]
 
 
 def handle_elem_uses(variables):
@@ -90,7 +103,7 @@ def handle_elem_uses(variables):
     if len(variables) < 1:
         return None
     elem = element(variables[c.ELEMENT].title())  # title casing (see str docs) required by mendeleev for some reason
-    return elem.uses
+    return f'{elem.name}: {elem.uses}'
 
 
 def handle_ideal_gas(variables):
@@ -104,7 +117,6 @@ def handle_ideal_gas(variables):
     returns:
         string containing air presure calculation output
     """
-    # TODO Add code to convert units
     if c.PRESSURE not in variables \
             or c.VOLUME not in variables \
             or c.NMOLS not in variables \
@@ -138,30 +150,37 @@ def handle_ideal_gas(variables):
         n = n_mols
 
     if pressure.value == c.UNK:
+        result_units = pressure.units
         p = (n * R * t) / v
-        if pressure.value == c.PA:              return p / c.PA_TO_ATM
-        elif variables[1] == c.KPA:             return p / c.KPA_TO_ATM
-        elif variables[1] == c.ATM:             return p
-        else:                                   return None
+
+        if result_units == c.PA:                result_value = p / c.PA_TO_ATM
+        elif result_units == c.KPA:             result_value = p / c.KPA_TO_ATM
+        elif result_units == c.ATM:             result_value = p
+        else:                                   result_value = None
 
     if volume.value == c.UNK:
+        result_units = volume.units
         v = (n * R * t) / p
-        if volume.units == c.MILILITERS:        return v / c.ML_TO_L
-        if volume.units == c.GALLONS:           return v / c.GAL_TO_L
-        elif volume.units == c.LITERS:          return v
-        else:                                   return None
+
+        if result_units == c.MILILITERS:        result_value = v / c.ML_TO_L
+        if result_units == c.GALLONS:           result_value = v / c.GAL_TO_L
+        elif result_units == c.LITERS:          result_value = v
+        else:                                   result_value = None
 
     if temperature.value == c.UNK:
+        result_units = temperature.units
         t = (n * R) / (p * v)
-        if temperature.units == c.CELSIUS:      return t - c.C_TO_K
-        elif temperature.units == c.FARENHEIT:  return (t - c.C_TO_K) * 9/5 + 32
-        elif temperature.units == c.KELVIN:     return t
-        else:                                   return None
 
+        if result_units == c.CELSIUS:           result_value = t - c.C_TO_K
+        elif result_units == c.FARENHEIT:       result_value = (t - c.C_TO_K) * 9/5 + 32
+        elif result_units == c.KELVIN:          result_value = t
+        else:                                   result_value = None
+    
     if n_mols == c.UNK:
-        return (R * t) / (p * v)
+        n = (R * t) / (p * v)
+        return f'Result: {n:.03f}'
 
-    return None
+    return f'Result: {result_value:.03f} {result_units}'
 
 
 def handle_stoich(variables):

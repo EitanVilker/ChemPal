@@ -72,7 +72,7 @@ def handle_ox_states(variables):
     """
     if len(variables) < 1:
         return None
-    elem = element(variables[c.ELEMENT])
+    elem = element(variables[c.ELEMENT].title())
     return elem.oxistates
 
 
@@ -89,7 +89,7 @@ def handle_elem_uses(variables):
     """
     if len(variables) < 1:
         return None
-    elem = element(variables[c.ELEMENT])
+    elem = element(variables[c.ELEMENT].title())  # title casing (see str docs) required by mendeleev for some reason
     return elem.uses
 
 
@@ -180,13 +180,26 @@ def handle_stoich(variables):
     if c.REAGENTS not in variables or c.PRODUCTS not in variables:
         return None
     
-    reagants = [parse_chemical(reagant, format='chempy') 
-                for reagant in variables[c.REAGANTS]]
-    products = [parse_chemical(product, format='chempy')
-                for product in variables[c.PRODUCTS]]
+    # prepare user input for use in chempy by using parse_chemical to standardize format
+    reagents = set(parse_chemical(reagent, output='chempy').name
+                for reagent in variables[c.REAGENTS])
+    products = set(parse_chemical(product, output='chempy').name
+                for product in variables[c.PRODUCTS])
 
-    return balance_stoichiometry(reagents, products)
+    # using balance_stoichiometry from chempy
+    reagents, products = balance_stoichiometry(reagents, products)
     
+    # build response string from balance_stoichiometry results
+    # format: 2 H2O + 1 O2 ==> 2 H2O2
+    response = ''
+    for reagent, count in reagents.items():
+        response += f'{count} {reagent} + '
+
+    response = response[:-2] + '==> '
+    for product, count in products.items():
+        response += f'{count} {product} + '
+
+    return response[:-3] # remove trailing ' + ' from above
 
 # helper variable to easily match intents to their handler functions
 # listed in order that they appear in this file
@@ -231,7 +244,7 @@ def calculate_output(watson_data):
 # user_inputs = {
 #     c.INTENT: c.ATOMIC_WEIGHT,
 #     c.VARS: {
-#         c.CHEMICAL: 'glucose'
+#         c.CHEMICAL: 'caffeine'
 #     }
 # }
 # print(calculate_output(user_inputs))
@@ -239,7 +252,7 @@ def calculate_output(watson_data):
 # user_inputs = {
 #     c.INTENT: c.ELEM_USES,
 #     c.VARS: {
-#         c.ELEMENT: 'Nickel'
+#         c.ELEMENT: 'nickel'
 #     }
 # }
 # print(calculate_output(user_inputs))
@@ -247,7 +260,7 @@ def calculate_output(watson_data):
 # user_inputs = {
 #     c.INTENT: c.OX_STATES,
 #     c.VARS: {
-#         c.ELEMENT: 'Nitrogen'
+#         c.ELEMENT: 'nitrogen'
 #     }
 # }
 # print(calculate_output(user_inputs))
@@ -259,6 +272,15 @@ def calculate_output(watson_data):
 #         c.VOLUME: c.Measurement(1, c.MILILITERS),
 #         c.NMOLS: c.Measurement(12, 'unitless'),
 #         c.TEMPERATURE: c.Measurement(c.UNK, c.FARENHEIT)
+#     }
+# }
+# print(calculate_output(user_inputs))
+
+# user_inputs = {
+#     c.INTENT: c.STOICH,
+#     c.VARS: {
+#         c.REAGENTS: ['glucose', 'o2'],
+#         c.PRODUCTS: ['h2o', 'co2']
 #     }
 # }
 # print(calculate_output(user_inputs))

@@ -72,8 +72,8 @@ def handle_ox_states(variables):
     """
     if len(variables) < 1:
         return None
-    element = element(variables[c.ELEMENT])
-    return element.oxistates
+    elem = element(variables[c.ELEMENT])
+    return elem.oxistates
 
 
 def handle_elem_uses(variables):
@@ -234,12 +234,24 @@ def calculate_output(watson_data):
 #         c.CHEMICAL: 'glucose'
 #     }
 # }
+# print(calculate_output(user_inputs))
+
 # user_inputs = {
 #     c.INTENT: c.ELEM_USES,
 #     c.VARS: {
 #         c.ELEMENT: 'Nickel'
 #     }
 # }
+# print(calculate_output(user_inputs))
+
+# user_inputs = {
+#     c.INTENT: c.OX_STATES,
+#     c.VARS: {
+#         c.ELEMENT: 'Nitrogen'
+#     }
+# }
+# print(calculate_output(user_inputs))
+
 # user_inputs = {
 #     c.INTENT: c.IDEAL_GAS,
 #     c.VARS: {
@@ -249,5 +261,4 @@ def calculate_output(watson_data):
 #         c.TEMPERATURE: c.Measurement(c.UNK, c.FARENHEIT)
 #     }
 # }
-
 # print(calculate_output(user_inputs))

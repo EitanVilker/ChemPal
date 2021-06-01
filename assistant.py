@@ -1,9 +1,13 @@
 import constants as c
 import json
+import sys
+
 from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from calculate_output import calculate_output
 from formatter import format
+from time import sleep
+
 
 API_KEY = "eV6IqpY5KaKIWRgw5XRk94hR6DC5fYCxaDX1nNIJz3iT"
 ASSISTANT_ID = "eb2dc57e-dc4d-475e-95bc-c7b646dbe09c" 
@@ -42,8 +46,11 @@ try:
     result = {}
     result[c.INTENT] = ""
     result[c.VARS] = {}
+    should_raise = False
+
     while True:
         ### user input
+        sys.stdout.write('>> ')
         input_text = input()
 
         ### get response from Watson assistant
@@ -75,8 +82,6 @@ try:
         
         ### format the information
         formatted_result = format(result)
-        # print(result)
-        # print(formatted_result)
 
         #### Parse the result here
 
@@ -87,17 +92,21 @@ try:
             
                 if calculation_output:
                     print(calculation_output)
-            except:
-                pass
+            except ValueError as e:
+                if should_raise:
+                    should_raise = False
+                    raise e
+                should_raise = True
 
         ### clear variables if the calculation is completed
         if output:
             if "generic" in output and len(output["generic"]) > 0:
                 if output["generic"][0]["response_type"] and output["generic"][0]["response_type"] == "text":
-                    if "calculating" in output["generic"][0]["text"]:
+                    if "calculating" in output["generic"][0]["text"].lower():
                         result = {}
                         result[c.INTENT] = ""
                         result[c.VARS] = {}
+                        print('\nIs there anything else I can help you with?')
                     else:
                         print(output["generic"][0]["text"])
 

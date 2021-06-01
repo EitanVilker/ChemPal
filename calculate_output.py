@@ -102,6 +102,7 @@ def handle_elem_uses(variables):
     """
     if len(variables) < 1:
         return None
+
     elem = element(variables[c.ELEMENT].title())  # title casing (see str docs) required by mendeleev for some reason
     return f'{elem.name}: {elem.uses}'
 
@@ -180,7 +181,6 @@ def handle_ideal_gas(variables):
     
     if n_mols == c.UNK:
         n = (p * v) / (R * t)
-        print(f'{R} {t} {p} {v}')
         return f'Result: {n:.03f}'
 
     return f'Result: {result_value:.03f} {result_units}'
@@ -200,7 +200,7 @@ def handle_stoich(variables):
     """
     if c.REAGENTS not in variables or c.PRODUCTS not in variables:
         return None
-    print(variables[c.REAGENTS])
+
     # prepare user input for use in chempy by using parse_chemical to standardize format
     reagents = set(parse_chemical(reagent, output='chempy').name
                 for reagent in variables[c.REAGENTS])

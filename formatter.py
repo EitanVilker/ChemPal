@@ -20,13 +20,12 @@ def format(result):
         variables[c.TEMPERATURE] = c.Measurement(result[c.VARS][c.TEMPERATURE], result[c.VARS][c.TEMPERATURE_UNITS])
         variables[c.N_MOLS] = c.Measurement(result[c.VARS][c.PRESSURE], result[c.VARS][c.PRESSURE_UNITS])
         
-    elif result[c.INTENT] == "AskingStoichiometry":
-        if c.WATSON_REAGENT0 in result[c.VARS]:
-            variables[c.REAGENTS] = [result[c.VARS][c.WATSON_REAGENT0]] 
+    elif result[c.INTENT] == "AskingStoichiometry":  # assumes that at least one reagent and one product are provided
+        variables[c.REAGENTS] [result[c.VARS][c.WATSON_REAGENT0]] 
         if c.WATSON_REAGENT1 in result[c.VARS]:
             variables[c.REAGENTS].extend(result[c.VARS][c.WATSON_REAGENT1]) 
-        if c.WATSON_PRODUCT0 in result[c.VARS]:
-            variables[c.PRODUCTS] =  [result[c.VARS][c.WATSON_PRODUCT0]] 
+        
+        variables[c.PRODUCTS] =  [result[c.VARS][c.WATSON_PRODUCT0]] 
         if c.WATSON_PRODUCT1 in result[c.VARS]:
             variables[c.PRODUCTS].extend(result[c.VARS][c.WATSON_PRODUCT1])
     

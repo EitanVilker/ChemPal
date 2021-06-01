@@ -26,3 +26,10 @@ ELEM_USES = 'element_uses'
 MATH = 'arithmetic'
 OX_STATES = 'oxidation_states'
 STOICH = 'stoichiometry'
+
+## unit conversions - if converting in opposite direction, simply divide instead of multiply
+PA_TO_ATM = 1 / 101325
+KPA_TO_ATM = PA_TO_ATM * 1000
+PA_TO_KPA = 1 / 1000
+ML_TO_L = 1 / 1000
+C_TO_K = 273.15 # add instead of multiply

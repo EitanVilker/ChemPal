@@ -90,20 +90,71 @@ def handle_asking_gas(variables):
     # TODO Add code to convert units
     if len(variables < 4):
         return None
+    pressure = 0
+    volume = 0
+    number = 0
+    temperature = 0
     pressure = float(variables[0]) # atm
     volume = float(variables[1]) # liters
     number = float(variables[2]) # moles
     R = 0.0821 # L·atm/(mol·K)
     temperature = float(variables[3]) # Kelvin
 
+    if variables[0] != "unknown":
+        if variables[1] == "Pa":
+            pressure = variables[0] * c.PA_TO_ATM
+        elif variables[1] == "kPa":
+            pressure = variables[0] * c.KPA_TO_ATM
+        elif variables[1] == "atm":
+            pressure = variables[0]
+    
+    if variables[2] != "unknown":
+        if variables[3] == "mL":
+            volume = variables[2] * c.ML_TO_L
+        elif variables[3] == "L":
+            volume = variables[2]
+    
+    if variables[4] != "unknown":
+        if variables[5] == "C":
+            temperature = variables[4] + c.C_TO_K
+        elif variables[5] == "F":
+            temperature = (variables[4] - 32) * 5/9 + c.C_TO_K # Unfortunately has to be hard-coded
+        elif variables[5] == "K":
+            temperature = variables[4]
+
+    if variables[6] != "unknown":
+        number = variables[6]
+
     if variables[0] == "unknown":
-        return (number * R * temperature) / volume
-    if variables[1] == "unknown":
-        return (number * R * temperature) / pressure
+        pressure = (number * R * temperature) / volume
+        if variables[1] == "Pa":
+            return pressure * 1/c.PA_TO_ATM
+        if variables[1] == "kPa":
+            return pressure * 1/c.KPA_TO_ATM
+        if variables[1] == "atm":
+            return pressure
+        return None
+
     if variables[2] == "unknown":
+        volume = (number * R * temperature) / pressure
+        if variables[3] == "mL":
+            return volume * 1 / c.ML_TO_L
+        if variables[3] == "L":
+            return volume
+        return None
+
+    if variables[4] == "unknown":
+        temperature = (number * R) / (pressure * volume)
+        if variables[5] == "C":
+            return temperature - c.C_TO_K
+        if variables[5] == "F":
+            return (temperature - c.C_TO_K) * 9/5 + 32
+        if variables[5] == "K":
+            return temperature
+        return None
+    if variables[6] == "unknown":
         return (R * temperature) / (pressure * volume)
-    if variables[3] == "unknown":
-        return (number * R) / (pressure * volume)
+    return None
 
 
 def handle_stoich(variables):

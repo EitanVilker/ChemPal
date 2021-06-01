@@ -1,8 +1,16 @@
-## variable names
-# arithmetic
 from collections import namedtuple
 
+## query types
+AIR_PRESSURE = 'air_pressure'
+ATOMIC_WEIGHT = 'atomic_weight'
+ELEM_USES = 'element_uses'
+MATH = 'arithmetic'
+OX_STATES = 'oxidation_states'
+STOICH = 'stoichiometry'
 
+
+## variable names
+# MATH = 'arithmetic handle_arithmetic, removed due to compatibility, see explanation in challenges section of report'
 EXPR = 'expression'
 
 # general chemistry
@@ -36,14 +44,6 @@ GALLONS = 'gallons'
 # stoichiometry
 REAGENTS = 'reagents'
 PRODUCTS = 'products'
-
-## query types
-AIR_PRESSURE = 'air_pressure'
-ATOMIC_WEIGHT = 'atomic_weight'
-ELEM_USES = 'element_uses'
-MATH = 'arithmetic'
-OX_STATES = 'oxidation_states'
-STOICH = 'stoichiometry'
 
 ## unit conversions - if converting in opposite direction, simply divide instead of multiply
 PA_TO_ATM = 1 / 101325

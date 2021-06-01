@@ -5,23 +5,41 @@ from mendeleev import *
 from chempy import *    
 from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
 
+""" 
+calculate_output.py
 
-def handle_arithmetic(variables):
-    """
-    Handler for arithmetic expressions. Leverages Python's interpreter through `eval`
-    to easily calculate arithmetic in common math notation by replacing the carat used
-    for exponentiation in common notation with the double-star operator used in Python.
+This file contains functionality to handle user queries after they have been
+received from Watson (see formatter.py for variable structure).
 
-    parameters:
-        variables: expected to be a dict object with the key `c.EXPR`, which 
-                should map to a string containing an arithmetic expression
+Currently, this file handles:
+    - Atomic Weight queries for any chemical
+    - Oxidation state queries for elements
+    - Queries related to how an element is used
+    - Air pressure calculations
+    - Stoichiometric calculations
+
+In order to add a handle, simply write a function `handle_task(variables)`, 
+add necessary constants to `constants.py`, add the function and name to 
+INTENTS_TO_HANDLERS. Of course, the functionality will need to be added
+to both the Watson Assistant (see `assistant_skills.json`) and `formatter.py`.
+"""
+# handle_arithmetic removed due to compatibility issues with Watson, see our final report/challenges
+# def handle_arithmetic(variables):
+#     """
+#     Handler for arithmetic expressions. Leverages Python's interpreter through `eval`
+#     to easily calculate arithmetic in common math notation by replacing the carat used
+#     for exponentiation in common notation with the double-star operator used in Python.
+
+#     parameters:
+#         variables: expected to be a dict object with the key `c.EXPR`, which 
+#                 should map to a string containing an arithmetic expression
                 
-    returns:
-        string containing uses for an element
-    """
-    if c.EXPR not in variables:
-            return None
-    return str(eval(variables[c.EXPR].replace('^', '**')))
+#     returns:
+#         string containing uses for an element
+#     """
+#     if c.EXPR not in variables:
+#             return None
+#     return str(eval(variables[c.EXPR].replace('^', '**')))
 
 
 def handle_atomic_weight(variables):
@@ -170,8 +188,8 @@ def handle_stoich(variables):
 
 # helper variable to easily match intents to their handler functions
 # listed in order that they appear in this file
-INTENTS_TO_FNS = {
-    c.MATH: handle_arithmetic,
+INTENTS_TO_HANDLERS = {
+    # c.MATH: handle_arithmetic, removed due to compatibility, see explanation in challenges section of report
     c.ATOMIC_WEIGHT: handle_atomic_weight,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
@@ -179,16 +197,28 @@ INTENTS_TO_FNS = {
     c.STOICH: handle_stoich
 }
 
+
+# Simply calls the appropriate handler for the provided intent
 def handle_query(intent, variables):
-    if intent not in INTENTS_TO_FNS:
+    if intent not in INTENTS_TO_HANDLERS:
         raise NotImplementedError(f'Intent {intent} is not recognized')
 
     return INTENTS_TO_FNS[intent](variables)
 
-# Input result is a dict
-def calculate_output(result):
-    intent = result["intent"] # string
-    variables = result["variables"] # format depends on intent
+# input data is a dict containing keys intent and variables
+def calculate_output(watson_data):
+    """
+    Given data from a Watson Assistant interaction represented as a Python dict,
+    generate a response to the interaction.
+
+    parameters:
+        watson_data -- a dict with keys `intent` and `variables`
+
+    returns:
+        string response to the query
+    """
+    intent = watson_data["intent"] # string
+    variables = watson_data["variables"] # format depends on intent
 
     return handle_query(intent, variables)
 

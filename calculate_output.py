@@ -1,44 +1,63 @@
 import constants as c
 
 from enum import Enum
-from mendeleev import *
-from chempy import *    
-from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
+from mendeleev import element
+from chempy import balance_stoichiometry   
+from chem_util import parse_chemical
 
+""" 
+calculate_output.py
 
-def handle_arithmetic(variables):
-    """
-    Handler for arithmetic expressions. Leverages Python's interpreter through `eval`
-    to easily calculate arithmetic in common math notation by replacing the carat used
-    for exponentiation in common notation with the double-star operator used in Python.
+This file contains functionality to handle user queries after they have been
+received from Watson (see formatter.py for variable structure).
 
-    parameters:
-        variables: expected to be a dict object with the key `c.EXPR`, which 
-                should map to a string containing an arithmetic expression
+Currently, this file handles:
+    - Atomic mass queries for any chemical
+    - Oxidation state queries for elements
+    - Queries related to how an element is used
+    - Air pressure calculations
+    - Stoichiometric calculations
+
+In order to add a handle, simply write a function `handle_task(variables)`, 
+add necessary constants to `constants.py`, add the function and name to 
+INTENTS_TO_HANDLERS. Of course, the functionality will need to be added
+to both the Watson Assistant (see `assistant_skills.json`) and `formatter.py`.
+"""
+# handle_arithmetic removed due to compatibility issues with Watson, see our final report/challenges
+# def handle_arithmetic(variables):
+#     """
+#     Handler for arithmetic expressions. Leverages Python's interpreter through `eval`
+#     to easily calculate arithmetic in common math notation by replacing the carat used
+#     for exponentiation in common notation with the double-star operator used in Python.
+
+#     parameters:
+#         variables: expected to be a dict object with the key `c.EXPR`, which 
+#                 should map to a string containing an arithmetic expression
                 
-    returns:
-        string containing uses for an element
-    """
-    if c.EXPR not in variables:
-            return None
-    return eval(variables[c.EXPR].replace('^', '**')) 
+#     returns:
+#         string containing uses for an element
+#     """
+#     if c.EXPR not in variables:
+#             return None
+#     return str(eval(variables[c.EXPR].replace('^', '**')))
 
 
-def handle_atomic_weight(variables):
+def handle_atomic_mass(variables):
     """
-    Handler for atomic weight lookup for a chemical. 
+    Handler for atomic mass lookup for a chemical. 
 
     parameters:
         variables: expected to be a dict object with the key constants.CHEMICAL, 
                 which should be a string containing a chemical name or formula
                 
     returns:
-        string containing atomic weight of the chemical
+        string containing atomic mass of the chemical
     """
     if c.CHEMICAL not in variables:
         return None
     
-    return parse_chemical(variables[c.CHEMICAL], output='atomic_weight')
+    substance = parse_chemical(variables[c.CHEMICAL], output='chempy')
+    return f'{substance.name} has a molar mass of {substance.molar_mass()}'
 
 
 def handle_ox_states(variables):
@@ -54,8 +73,20 @@ def handle_ox_states(variables):
     """
     if len(variables) < 1:
         return None
-    element = element(variables[0])
-    return element.oxistates
+    elem = element(variables[c.ELEMENT].title())
+
+    if len(elem.oxistates) == 0:
+        return None
+
+    response = f'{elem.name} has oxidation states (in order of stability): '
+    for ox in elem.oxistates:
+        if ox == elem.oxistates[-1]:    
+            response += 'and '
+        if ox > 0:
+            response += '+'
+        response += f'{ox}, '
+        
+    return response [:-2]
 
 
 def handle_elem_uses(variables):
@@ -71,11 +102,12 @@ def handle_elem_uses(variables):
     """
     if len(variables) < 1:
         return None
-    element = element(variables[0])
-    return element.uses
+
+    elem = element(variables[c.ELEMENT].title())  # title casing (see str docs) required by mendeleev for some reason
+    return f'{elem.name}: {elem.uses}'
 
 
-def handle_air_pressure(variables):
+def handle_ideal_gas(variables):
     """
     Handler for `pv=nrt` calculations. 
 
@@ -86,73 +118,72 @@ def handle_air_pressure(variables):
     returns:
         string containing air presure calculation output
     """
-    # TODO Add code to convert units
     if c.PRESSURE not in variables \
             or c.VOLUME not in variables \
             or c.NMOLS not in variables \
             or c.TEMPERATURE not in variables:
         return None
-    pressure = 0
-    volume = 0
-    number = 0
-    temperature = 0
+
+    pressure = variables[c.PRESSURE]
+    volume = variables[c.VOLUME]
+    temperature = variables[c.TEMPERATURE]
+    n_mols = variables[c.NMOLS]
+
     R = 0.0821 # L·atm/(mol·K)
 
-    if variables[0] != "unknown":
-        if variables[1] == c.PA:
-            pressure = variables[0] * c.PA_TO_ATM
-        elif variables[1] == c.KPA:
-            pressure = variables[0] * c.KPA_TO_ATM
-        elif variables[1] == c.ATM:
-            pressure = variables[0]
+    # standardize pressure to atmospheres
+    if pressure.value != c.UNK:
+        if pressure.units == c.PA:              p = pressure.value * c.PA_TO_ATM
+        elif pressure.units == c.KPA:           p = pressure.value * c.KPA_TO_ATM
+        elif pressure.units == c.ATM:           p = pressure.value
     
-    if variables[2] != "unknown":
-        if variables[3] == c.MILILITERS:
-            volume = variables[2] * c.ML_TO_L
-        elif variables[3] == c.LITERS:
-            volume = variables[2]
+    # standardize volume to liters
+    if volume.value != c.UNK:
+        if volume.units == c.MILILITERS:        v = volume.value * c.ML_TO_L
+        elif volume.units == c.GALLONS:         v = volume.value * c.GAL_TO_L
+        elif volume.units == c.LITERS:          v = volume.value
     
-    if variables[4] != "unknown":
-        if variables[5] == c.CELSIUS:
-            temperature = variables[4] + c.C_TO_K
-        elif variables[5] == c.FARENHEIT:
-            temperature = (variables[4] - 32) * 5/9 + c.C_TO_K # Unfortunately has to be hard-coded
-        elif variables[5] == c.KELVIN:
-            temperature = variables[4]
+    # standardize temperature to kelvin
+    if temperature.value != c.UNK:
+        if temperature.units == c.CELSIUS:      t = temperature.value + c.C_TO_K
+        elif temperature.units == c.FARENHEIT:  t = (temperature.value - 32.) * 5./9. + c.C_TO_K # Unfortunately has to be hard-coded
+        elif temperature.units == c.KELVIN:     t = temperature.value
 
-    if variables[6] != "unknown":
-        number = variables[6]
+    if n_mols != c.UNK:
+        n = n_mols
 
-    if variables[0] == "unknown":
-        pressure = (number * R * temperature) / volume
-        if variables[1] == c.PA:
-            return pressure * 1/c.PA_TO_ATM
-        if variables[1] == c.KPA:
-            return pressure * 1/c.KPA_TO_ATM
-        if variables[1] == c.ATM:
-            return pressure
-        return None
+    if pressure.value == c.UNK:
+        result_units = pressure.units
+        p = (n * R * t) / v
 
-    if variables[2] == "unknown":
-        volume = (number * R * temperature) / pressure
-        if variables[3] == c.MILILITERS:
-            return volume * 1 / c.ML_TO_L
-        if variables[3] == c.LITERS:
-            return volume
-        return None
+        if result_units == c.PA:                result_value = p / c.PA_TO_ATM
+        elif result_units == c.KPA:             result_value = p / c.KPA_TO_ATM
+        elif result_units == c.ATM:             result_value = p
+        else:                                   result_value = None
 
-    if variables[4] == "unknown":
-        temperature = (number * R) / (pressure * volume)
-        if variables[5] == c.CELSIUS:
-            return temperature - c.C_TO_K
-        if variables[5] == c.FARENHEIT:
-            return (temperature - c.C_TO_K) * 9/5 + 32
-        if variables[5] == c.KELVIN:
-            return temperature
-        return None
-    if variables[6] == "unknown":
-        return (R * temperature) / (pressure * volume)
-    return None
+    if volume.value == c.UNK:
+        result_units = volume.units
+        v = (n * R * t) / p
+
+        if result_units == c.MILILITERS:        result_value = v / c.ML_TO_L
+        if result_units == c.GALLONS:           result_value = v / c.GAL_TO_L
+        elif result_units == c.LITERS:          result_value = v
+        else:                                   result_value = None
+
+    if temperature.value == c.UNK:
+        result_units = temperature.units
+        t = (p * v) / (n * R)
+
+        if result_units == c.CELSIUS:           result_value = t - c.C_TO_K
+        elif result_units == c.FARENHEIT:       result_value = (t - c.C_TO_K) * 9/5 + 32
+        elif result_units == c.KELVIN:          result_value = t
+        else:                                   result_value = None
+    
+    if n_mols == c.UNK:
+        n = (p * v) / (R * t)
+        return f'Result: {n:.03f}'
+
+    return f'Result: {result_value:.03f} {result_units}'
 
 
 def handle_stoich(variables):
@@ -169,53 +200,108 @@ def handle_stoich(variables):
     """
     if c.REAGENTS not in variables or c.PRODUCTS not in variables:
         return None
-    
-    reagants = [parse_chemical(reagant, format='chempy') 
-                for reagant in variables[c.REAGANTS]]
-    products = [parse_chemical(product, format='chempy')
-                for product in variables[c.PRODUCTS]]
 
-    return balance_stoichiometry(reagents, products)
+    # prepare user input for use in chempy by using parse_chemical to standardize format
+    reagents = set(parse_chemical(reagent, output='chempy').name
+                for reagent in variables[c.REAGENTS])
+    products = set(parse_chemical(product, output='chempy').name
+                for product in variables[c.PRODUCTS])
+
+    # using balance_stoichiometry from chempy
+    reagents, products = balance_stoichiometry(reagents, products)
     
+    # build response string from balance_stoichiometry results
+    # format: 2 H2O + 1 O2 ==> 2 H2O2
+    response = ''
+    for reagent, count in reagents.items():
+        response += f'{count} {reagent} + '
+
+    response = response[:-2] + '==> '
+    for product, count in products.items():
+        response += f'{count} {product} + '
+
+    return response[:-3] # remove trailing ' + ' from above
 
 # helper variable to easily match intents to their handler functions
 # listed in order that they appear in this file
-INTENTS_TO_FNS = {
-    c.MATH: handle_arithmetic,
-    c.ATOMIC_WEIGHT: handle_atomic_weight,
+INTENTS_TO_HANDLERS = {
+    # c.MATH: handle_arithmetic, removed due to compatibility, see explanation in challenges section of report
+    c.ATOMIC_MASS: handle_atomic_mass,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
-    c.AIR_PRESSURE: handle_air_pressure,
+    c.IDEAL_GAS: handle_ideal_gas,
     c.STOICH: handle_stoich
 }
 
+
+# Simply calls the appropriate handler for the provided intent
 def handle_query(intent, variables):
-    if intent not in INTENTS_TO_FNS:
+    if intent not in INTENTS_TO_HANDLERS:
         raise NotImplementedError(f'Intent {intent} is not recognized')
 
-    return INTENTS_TO_FNS[intent](variables)
+    return INTENTS_TO_HANDLERS[intent](variables)
 
-# Input result is a dict
-def calculate_output(result):
-    intent = result["intent"] # string
-    variables = result["variables"] # format depends on intent
+
+# input data is a dict containing keys intent and variables
+def calculate_output(watson_data):
+    """
+    Given data from a Watson Assistant interaction represented as a Python dict,
+    generate a response to the interaction.
+
+    parameters:
+        watson_data -- a dict with keys `intent` and `variables`
+
+    returns:
+        string response to the query
+    """
+    intent = watson_data["intent"] # string
+    variables = watson_data["variables"] # format depends on intent
 
     return handle_query(intent, variables)
 
 
-## Examples of how to use the above functions
+# # Examples of how to use the above functions
 
 # user_inputs = {
-#     'intent': c.ATOMIC_WEIGHT,
-#     'variables': {
-#         'chemical': 'glucose'
+#     c.INTENT: c.ATOMIC_WEIGHT,
+#     c.VARS: {
+#         c.CHEMICAL: 'caffeine'
 #     }
 # }
-# user_inputs = {
-#     'intent': c.MATH,
-#     'variables': {
-#         'expression': '4 * 7 - 13 ^ 2'.replace('^', '**') # TODO Convert ^ to ** in expressions
-#     }
-# }
+# print(calculate_output(user_inputs))
 
+# user_inputs = {
+#     c.INTENT: c.ELEM_USES,
+#     c.VARS: {
+#         c.ELEMENT: 'nickel'
+#     }
+# }
+# print(calculate_output(user_inputs))
+
+# user_inputs = {
+#     c.INTENT: c.OX_STATES,
+#     c.VARS: {
+#         c.ELEMENT: 'nitrogen'
+#     }
+# }
+# print(calculate_output(user_inputs))
+
+# user_inputs = {
+#     c.INTENT: c.IDEAL_GAS,
+#     c.VARS: {
+#         c.PRESSURE: c.Measurement(3.5, c.ATM),
+#         c.VOLUME: c.Measurement(1, c.MILILITERS),
+#         c.NMOLS: c.Measurement(12, 'unitless'),
+#         c.TEMPERATURE: c.Measurement(c.UNK, c.FARENHEIT)
+#     }
+# }
+# print(calculate_output(user_inputs))
+
+# user_inputs = {
+#     c.INTENT: c.STOICH,
+#     c.VARS: {
+#         c.REAGENTS: ['glucose', 'o2'],
+#         c.PRODUCTS: ['h2o', 'co2']
+#     }
+# }
 # print(calculate_output(user_inputs))

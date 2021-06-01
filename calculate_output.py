@@ -1,8 +1,8 @@
 import constants as c
 
 from enum import Enum
-from mendeleev import *
-from chempy import *    
+from mendeleev import element
+from chempy import balance_stoichiometry   
 from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
 
 """ 
@@ -72,7 +72,7 @@ def handle_ox_states(variables):
     """
     if len(variables) < 1:
         return None
-    element = element(variables[0])
+    element = element(variables[c.ELEMENT])
     return element.oxistates
 
 
@@ -89,11 +89,11 @@ def handle_elem_uses(variables):
     """
     if len(variables) < 1:
         return None
-    element = element(variables[0])
-    return element.uses
+    elem = element(variables[c.ELEMENT])
+    return elem.uses
 
 
-def handle_air_pressure(variables):
+def handle_IDEAL_GAS(variables):
     """
     Handler for `pv=nrt` calculations. 
 
@@ -193,7 +193,7 @@ INTENTS_TO_HANDLERS = {
     c.ATOMIC_WEIGHT: handle_atomic_weight,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
-    c.AIR_PRESSURE: handle_air_pressure,
+    c.IDEAL_GAS: handle_IDEAL_GAS,
     c.STOICH: handle_stoich
 }
 
@@ -203,7 +203,8 @@ def handle_query(intent, variables):
     if intent not in INTENTS_TO_HANDLERS:
         raise NotImplementedError(f'Intent {intent} is not recognized')
 
-    return INTENTS_TO_FNS[intent](variables)
+    return INTENTS_TO_HANDLERS[intent](variables)
+
 
 # input data is a dict containing keys intent and variables
 def calculate_output(watson_data):
@@ -226,15 +227,15 @@ def calculate_output(watson_data):
 # # Examples of how to use the above functions
 
 # user_inputs = {
-#     'intent': c.ATOMIC_WEIGHT,
-#     'variables': {
-#         'chemical': 'glucose'
+#     c.INTENT: c.ATOMIC_WEIGHT,
+#     c.VARS: {
+#         c.CHEMICAL: 'glucose'
 #     }
 # }
 # user_inputs = {
-#     'intent': c.MATH,
-#     'variables': {
-#         'expression': '4 * 7 - 13 ^ 2'.replace('^', '**') # TODO Convert ^ to ** in expressions
+#     c.INTENT: c.ELEM_USES,
+#     c.VARS: {
+#         c.ELEMENT: 'Nickel'
 #     }
 # }
 

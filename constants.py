@@ -1,26 +1,37 @@
 from collections import namedtuple
 
-## query types
-AIR_PRESSURE = 'air_pressure'
-ATOMIC_WEIGHT = 'atomic_weight'
-ELEM_USES = 'element_uses'
-MATH = 'arithmetic'
-OX_STATES = 'oxidation_states'
-STOICH = 'stoichiometry'
+## Watson variables
+VARS = 'variables'
+WATSON_CHEM = 'ChemicalCompound'
+WATSON_ELEM = 'ChemicalElement'
+WATSON_REAGANT0 = 'Reactant0'
+WATSON_REAGANT1 = 'Reactant1'
+WATSON_PRODUCT0 = 'Product0'
+WATSON_PRODUCT1 = 'Product1'
+
+# intents
+INTENT = 'intent'
+INTENTS = 'intents'
+ATOMIC_WEIGHT = 'AskingMass'
+ELEM_USES = 'AskingElementUses'
+IDEAL_GAS = 'AskingGas'
+# MATH = 'AskingArithmetic'
+OX_STATES = 'AskingOxidationStates'
+STOICH = 'AskingStoichiometry'
 
 
-## variable names
+## simple math
 # MATH = 'arithmetic handle_arithmetic, removed due to compatibility, see explanation in challenges section of report'
-EXPR = 'expression'
+# EXPR = 'expression'
 
-# general chemistry
+## general chemistry
 CHEMICAL = 'chemical'
 ELEMENT = 'element'
 Measurement = namedtuple('Measurement', ['value', 'units'])
 
-# air pressure
+## ideal gas law calculations
 UNK = 'unknown'
-NMOLS = 'n_moles'
+NMOLS = 'mole'
 N_ATOMS = 'n_atoms'
 GRAMS = 'grams'
 KG = 'kg'
@@ -41,7 +52,7 @@ LITERS = 'liters'
 MILILITERS = 'ml'
 GALLONS = 'gallons'
 
-# stoichiometry
+## stoichiometry
 REAGENTS = 'reagents'
 PRODUCTS = 'products'
 

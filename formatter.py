@@ -1,49 +1,36 @@
+import constants as c
 
 # Input result is a dict
 def format(result):
     new_result = {}
-    variables = []
-    if result["intent"] == "AskingMass":
-        new_result["intent"] = "Atomic Weight"
-        if "ChemicalCompound" in result["variables"]:
-            variables.append(result["variables"]["ChemicalCompound"]) 
-        new_result["variables"] = variables
-    elif result["intent"] == "AsingOxidationStates":
-        new_result["intent"] = "Oxidation State"
-        if "ChemicalElement" in result["variables"]:
-            variables.append(result["variables"]["ChemicalElement"]) 
-        new_result["variables"] = variables
-    elif result["intent"] == "AskingElementUses":
-        new_result["intent"] = "Element Uses"
-        if "ChemicalElement" in result["variables"]:
-            variables.append(result["variables"]["ChemicalElement"]) 
-        new_result["variables"] = variables
-    elif result["intent"] == "AskingGas":
-        new_result["intent"] = "Ideal Gas Law"
-        if "pressure" in result["variables"]:
-            variables.insert(0, result["variables"]["pressure"]) 
-        if "pressure_unit" in result["variables"]:
-            variables.insert(1, result["variables"]["pressure_unit"]) 
-        if "volume" in result["variables"]:
-            variables.insert(2, result["variables"]["volume"]) 
-        if "volume_unit" in result["variables"]:
-            variables.insert(3, result["variables"]["volume_unit"]) 
-        if "temperature" in result["variables"]:
-            variables.insert(4, result["variables"]["temperature"]) 
-        if "temperature_unit" in result["variables"]:
-            variables.insert(5, result["variables"]["temperature_unit"]) 
-        if "mole" in result["variables"]:
-            variables.insert(6, result["variables"]["mole"]) 
-        new_result["variables"] = variables
-    elif result["intent"] == "AskingStoichiometry":
-        new_result["intent"] = "Stoichiometry"
-        if "Reactant0" in result["variables"]:
-            variables.insert(0, result["variables"]["Reactant0"]) 
-        if "Reactant1" in result["variables"]:
-            variables.insert(1, result["variables"]["Reactant1"]) 
-        if "Product0" in result["variables"]:
-            variables.insert(2, result["variables"]["Product0"]) 
-        if "Product1" in result["variables"]:
-            variables.insert(3, result["variables"]["Product1"]) 
-        new_result["variables"] = variables
+    variables = {}
+
+    if result[c.INTENT] == c.ATOMIC_MASS:
+        variables[c.CHEMICAL] = result[c.VARS][c.WATSON_CHEM]
+
+    elif result[c.INTENT] == c.OX_STATES:
+        variables[c.ELEMENT] = result[c.VARS][c.WATSON_ELEM]
+
+    elif result[c.INTENT] == c.ELEM_USES:
+        variables[c.ELEMENT] = result[c.VARS][c.WATSON_ELEM]
+
+    elif result[c.INTENT] == c.INTENT:
+        variables[c.PRESSURE] = c.Measurement(result[c.VARS][c.PRESSURE], result[c.VARS][c.PRESSURE_UNITS])
+        variables[c.VOLUME] = c.Measurement(result[c.VARS][c.VOLUME], result[c.VARS][c.VOLUME_UNITS])
+        variables[c.TEMPERATURE] = c.Measurement(result[c.VARS][c.TEMPERATURE], result[c.VARS][c.TEMPERATURE_UNITS])
+        variables[c.N_MOLS] = c.Measurement(result[c.VARS][c.PRESSURE], result[c.VARS][c.PRESSURE_UNITS])
+        
+    elif result[c.INTENT] == "AskingStoichiometry":
+        if c.WATSON_REAGENT0 in result[c.VARS]:
+            variables[c.REAGENTS] = [result[c.VARS][c.WATSON_REAGENT0]] 
+        if c.WATSON_REAGENT1 in result[c.VARS]:
+            variables[c.REAGENTS].extend(result[c.VARS][c.WATSON_REAGENT1]) 
+        if c.WATSON_PRODUCT0 in result[c.VARS]:
+            variables[c.PRODUCTS] =  [result[c.VARS][c.WATSON_PRODUCT0]] 
+        if c.WATSON_PRODUCT1 in result[c.VARS]:
+            variables[c.PRODUCTS].extend(result[c.VARS][c.WATSON_PRODUCT1])
+    
+    new_result[c.INTENT] = result[c.INTENT]
+    new_result[c.VARS] = variables
+    
     return  new_result

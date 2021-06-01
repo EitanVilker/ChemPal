@@ -1,3 +1,4 @@
+import constants as c
 import json
 from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
@@ -39,8 +40,8 @@ print(message["output"]["generic"][0]["text"])
  
 try:
     result = {}
-    result["intent"] = ""
-    result["variables"] = {}
+    result[c.INTENT] = ""
+    result[c.VARS] = {}
     while True:
         ### user input
         input_text = input()
@@ -66,11 +67,11 @@ try:
         ### retrieve the information from the response
         output = message["output"]
         if output:
-            if "intents" in output and len(output["intents"]) > 0:
-                result["intent"] = output["intents"][0]["intent"]
+            if c.INTENTS in output and len(output[c.INTENTS]) > 0:
+                result[c.INTENT] = output[c.INTENTS][0][c.INTENT]
         if "context" in message:
             if "skills" in message["context"] and "main skill" in message["context"]["skills"] and "user_defined" in message["context"]["skills"]["main skill"]:
-                result["variables"] = message["context"]["skills"]["main skill"]["user_defined"]
+                result[c.VARS] = message["context"]["skills"]["main skill"]["user_defined"]
         
         ### post-process the information to make the format consistent with our calculator
         post_processed_result = format(result)
@@ -91,8 +92,8 @@ try:
                     print(output["generic"][0]["text"])
                     if "calculating" in output["generic"][0]["text"]:
                         result = {}
-                        result["intent"] = ""
-                        result["variables"] = {}
+                        result[c.INTENT] = ""
+                        result[c.VARS] = {}
 
         
 except KeyboardInterrupt:

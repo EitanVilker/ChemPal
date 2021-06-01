@@ -12,7 +12,7 @@ This file contains functionality to handle user queries after they have been
 received from Watson (see formatter.py for variable structure).
 
 Currently, this file handles:
-    - Atomic Weight queries for any chemical
+    - Atomic mass queries for any chemical
     - Oxidation state queries for elements
     - Queries related to how an element is used
     - Air pressure calculations
@@ -42,16 +42,16 @@ to both the Watson Assistant (see `assistant_skills.json`) and `formatter.py`.
 #     return str(eval(variables[c.EXPR].replace('^', '**')))
 
 
-def handle_atomic_weight(variables):
+def handle_atomic_mass(variables):
     """
-    Handler for atomic weight lookup for a chemical. 
+    Handler for atomic mass lookup for a chemical. 
 
     parameters:
         variables: expected to be a dict object with the key constants.CHEMICAL, 
                 which should be a string containing a chemical name or formula
                 
     returns:
-        string containing atomic weight of the chemical
+        string containing atomic mass of the chemical
     """
     if c.CHEMICAL not in variables:
         return None
@@ -130,17 +130,19 @@ def handle_ideal_gas(variables):
 
     R = 0.0821 # L·atm/(mol·K)
 
-    # standardize the pressure unit to atmospheres
+    # standardize pressure to atmospheres
     if pressure.value != c.UNK:
         if pressure.units == c.PA:              p = pressure.value * c.PA_TO_ATM
         elif pressure.units == c.KPA:           p = pressure.value * c.KPA_TO_ATM
         elif pressure.units == c.ATM:           p = pressure.value
     
+    # standardize volume to liters
     if volume.value != c.UNK:
         if volume.units == c.MILILITERS:        v = volume.value * c.ML_TO_L
         elif volume.units == c.GALLONS:         v = volume.value * c.GAL_TO_L
         elif volume.units == c.LITERS:          v = volume.value
     
+    # standardize temperature to kelvin
     if temperature.value != c.UNK:
         if temperature.units == c.CELSIUS:      t = temperature.value + c.C_TO_K
         elif temperature.units == c.FARENHEIT:  t = (temperature.value - 32.) * 5./9. + c.C_TO_K # Unfortunately has to be hard-coded
@@ -169,7 +171,7 @@ def handle_ideal_gas(variables):
 
     if temperature.value == c.UNK:
         result_units = temperature.units
-        t = (n * R) / (p * v)
+        t = (p * v) / (n * R)
 
         if result_units == c.CELSIUS:           result_value = t - c.C_TO_K
         elif result_units == c.FARENHEIT:       result_value = (t - c.C_TO_K) * 9/5 + 32
@@ -177,7 +179,8 @@ def handle_ideal_gas(variables):
         else:                                   result_value = None
     
     if n_mols == c.UNK:
-        n = (R * t) / (p * v)
+        n = (p * v) / (R * t)
+        print(f'{R} {t} {p} {v}')
         return f'Result: {n:.03f}'
 
     return f'Result: {result_value:.03f} {result_units}'
@@ -223,7 +226,7 @@ def handle_stoich(variables):
 # listed in order that they appear in this file
 INTENTS_TO_HANDLERS = {
     # c.MATH: handle_arithmetic, removed due to compatibility, see explanation in challenges section of report
-    c.ATOMIC_WEIGHT: handle_atomic_weight,
+    c.ATOMIC_MASS: handle_atomic_mass,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
     c.IDEAL_GAS: handle_ideal_gas,

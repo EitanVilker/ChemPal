@@ -82,9 +82,13 @@ try:
 
         ### Calculate output
         if formatted_result:
-            calculation_output = calculate_output(formatted_result)
-            if calculation_output:
-                print(calculation_output)
+            try:
+                calculation_output = calculate_output(formatted_result)
+            
+                if calculation_output:
+                    print(calculation_output)
+            except:
+                pass
 
         ### clear variables if the calculation is completed
         if output:

@@ -55,9 +55,6 @@ def parse_chemical_name(name, output):
         # as Mendeleev while also supporting compounds
         pass
 
-    elif output == 'atomic_weight':
-        substance = chempy.Substance.from_formula(compound.molecular_formula)
-        return substance.molar_mass()
 
 
 def parse_chemical_formula(formula, output):
@@ -81,10 +78,6 @@ def parse_chemical_formula(formula, output):
         # I believe the pubchempy functionality provides as much information
         # as Mendeleev while also supporting compounds
         pass
-
-    elif output == 'atomic_weight':
-        substance = chempy.Substance.from_formula(formula)
-        return substance.molar_mass()
 
 
 def parse_chemical(chemical, output='chempy'):

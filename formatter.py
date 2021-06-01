@@ -7,7 +7,7 @@ def format(result):
     if not (c.INTENT in result and c.VARS in result):
         return None
 
-    if result[c.INTENT] == c.ATOMIC_WEIGHT:
+    if result[c.INTENT] == c.ATOMIC_MASS:
         if c.WATSON_CHEM in result[c.VARS]:
             variables[c.CHEMICAL] = result[c.VARS][c.WATSON_CHEM]
 

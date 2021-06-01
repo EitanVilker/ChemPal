@@ -11,6 +11,7 @@ ELEMENT = 'element'
 Measurement = namedtuple('Measurement', ['value', 'units'])
 
 # air pressure
+UNK = 'unknown'
 NMOLS = 'n_moles'
 N_ATOMS = 'n_atoms'
 GRAMS = 'grams'

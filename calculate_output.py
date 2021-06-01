@@ -21,7 +21,7 @@ def handle_arithmetic(variables):
     """
     if c.EXPR not in variables:
             return None
-    return eval(variables[c.EXPR].replace('^', '**')) 
+    return str(eval(variables[c.EXPR].replace('^', '**')))
 
 
 def handle_atomic_weight(variables):
@@ -92,66 +92,56 @@ def handle_air_pressure(variables):
             or c.NMOLS not in variables \
             or c.TEMPERATURE not in variables:
         return None
-    pressure = 0
+
+    pressure = variables[c.PRESSURE]
+    volume = variables[c.VOLUME]
+    temperature = variables[c.NMOLS]
+    n_mols = variables[c.TEMPERATURE]
+
     volume = 0
     number = 0
     temperature = 0
     R = 0.0821 # L·atm/(mol·K)
 
-    if variables[0] != "unknown":
-        if variables[1] == c.PA:
-            pressure = variables[0] * c.PA_TO_ATM
-        elif variables[1] == c.KPA:
-            pressure = variables[0] * c.KPA_TO_ATM
-        elif variables[1] == c.ATM:
-            pressure = variables[0]
+    # standardize the pressure unit to atmospheres
+    if pressure.value != c.UNK:
+        if pressure.units == c.PA:              p = pressure.value * c.PA_TO_ATM
+        elif pressure.units == c.KPA:           p = pressure.value * c.KPA_TO_ATM
+        elif pressure.units == c.ATM:           p = pressure.value
     
-    if variables[2] != "unknown":
-        if variables[3] == c.MILILITERS:
-            volume = variables[2] * c.ML_TO_L
-        elif variables[3] == c.LITERS:
-            volume = variables[2]
+    if volume.value != c.UNK:
+        if volume.units == c.MILILITERS:        v = volume.value * c.ML_TO_L
+        elif volume.units == c.LITERS:          v = volume.value
     
-    if variables[4] != "unknown":
-        if variables[5] == c.CELSIUS:
-            temperature = variables[4] + c.C_TO_K
-        elif variables[5] == c.FARENHEIT:
-            temperature = (variables[4] - 32) * 5/9 + c.C_TO_K # Unfortunately has to be hard-coded
-        elif variables[5] == c.KELVIN:
-            temperature = variables[4]
+    if temperature.value != c.UNK:
+        if temperature.units == c.CELSIUS:      t = temperature.value + c.C_TO_K
+        elif temperature.units == c.FARENHEIT:  t = (temperature.value - 32.) * 5./9. + c.C_TO_K # Unfortunately has to be hard-coded
+        elif temperature.units == c.KELVIN:     t = temperature.value
 
-    if variables[6] != "unknown":
-        number = variables[6]
+    if n_mols.value != c.UNK:
+        number = n_mols.value
 
-    if variables[0] == "unknown":
-        pressure = (number * R * temperature) / volume
-        if variables[1] == c.PA:
-            return pressure * 1/c.PA_TO_ATM
-        if variables[1] == c.KPA:
-            return pressure * 1/c.KPA_TO_ATM
-        if variables[1] == c.ATM:
-            return pressure
-        return None
+    if pressure.value == c.UNK:
+        p = (n * R * t) / v
+        if pressure.value == c.PA:              return p * 1/c.PA_TO_ATM
+        elif variables[1] == c.KPA:             return p * 1/c.KPA_TO_ATM
+        elif variables[1] == c.ATM:             return p
+        else:                                   return None
 
-    if variables[2] == "unknown":
-        volume = (number * R * temperature) / pressure
-        if variables[3] == c.MILILITERS:
-            return volume * 1 / c.ML_TO_L
-        if variables[3] == c.LITERS:
-            return volume
-        return None
+    if volume.value == c.UNK:
+        v = (n * R * t) / p
+        if volume.units == c.MILILITERS:        return v * 1 / c.ML_TO_L
+        elif volume.units == c.LITERS:          return v
+        else:                                   return None
 
-    if variables[4] == "unknown":
-        temperature = (number * R) / (pressure * volume)
-        if variables[5] == c.CELSIUS:
-            return temperature - c.C_TO_K
-        if variables[5] == c.FARENHEIT:
-            return (temperature - c.C_TO_K) * 9/5 + 32
-        if variables[5] == c.KELVIN:
-            return temperature
-        return None
-    if variables[6] == "unknown":
-        return (R * temperature) / (pressure * volume)
+    if temperature.value == c.UNK:
+        t = (n * R) / (p * v)
+        if temperature.units == c.CELSIUS:      return t - c.C_TO_K
+        elif temperature.units == c.FARENHEIT:  return (t - c.C_TO_K) * 9/5 + 32
+        elif temperature.units == c.KELVIN:     return t
+        else:                                   return None
+    if n_mols.value == c.UNK:
+        return (R * t) / (p * v)
     return None
 
 
@@ -203,7 +193,7 @@ def calculate_output(result):
     return handle_query(intent, variables)
 
 
-## Examples of how to use the above functions
+# # Examples of how to use the above functions
 
 # user_inputs = {
 #     'intent': c.ATOMIC_WEIGHT,

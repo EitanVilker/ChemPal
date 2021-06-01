@@ -3,7 +3,7 @@ import constants as c
 from enum import Enum
 from mendeleev import element
 from chempy import balance_stoichiometry   
-from chem_util import parse_chemical_name, parse_chemical_formula, parse_chemical
+from chem_util import parse_chemical
 
 """ 
 calculate_output.py
@@ -93,7 +93,7 @@ def handle_elem_uses(variables):
     return elem.uses
 
 
-def handle_IDEAL_GAS(variables):
+def handle_ideal_gas(variables):
     """
     Handler for `pv=nrt` calculations. 
 
@@ -113,12 +113,9 @@ def handle_IDEAL_GAS(variables):
 
     pressure = variables[c.PRESSURE]
     volume = variables[c.VOLUME]
-    temperature = variables[c.NMOLS]
-    n_mols = variables[c.TEMPERATURE]
+    temperature = variables[c.TEMPERATURE]
+    n_mols = variables[c.NMOLS]
 
-    volume = 0
-    number = 0
-    temperature = 0
     R = 0.0821 # L·atm/(mol·K)
 
     # standardize the pressure unit to atmospheres
@@ -129,6 +126,7 @@ def handle_IDEAL_GAS(variables):
     
     if volume.value != c.UNK:
         if volume.units == c.MILILITERS:        v = volume.value * c.ML_TO_L
+        elif volume.units == c.GALLONS:         v = volume.value * c.GAL_TO_L
         elif volume.units == c.LITERS:          v = volume.value
     
     if temperature.value != c.UNK:
@@ -137,18 +135,19 @@ def handle_IDEAL_GAS(variables):
         elif temperature.units == c.KELVIN:     t = temperature.value
 
     if n_mols.value != c.UNK:
-        number = n_mols.value
+        n = n_mols.value
 
     if pressure.value == c.UNK:
         p = (n * R * t) / v
-        if pressure.value == c.PA:              return p * 1/c.PA_TO_ATM
-        elif variables[1] == c.KPA:             return p * 1/c.KPA_TO_ATM
+        if pressure.value == c.PA:              return p / c.PA_TO_ATM
+        elif variables[1] == c.KPA:             return p / c.KPA_TO_ATM
         elif variables[1] == c.ATM:             return p
         else:                                   return None
 
     if volume.value == c.UNK:
         v = (n * R * t) / p
-        if volume.units == c.MILILITERS:        return v * 1 / c.ML_TO_L
+        if volume.units == c.MILILITERS:        return v / c.ML_TO_L
+        if volume.units == c.GALLONS:           return v / c.GAL_TO_L
         elif volume.units == c.LITERS:          return v
         else:                                   return None
 
@@ -158,8 +157,11 @@ def handle_IDEAL_GAS(variables):
         elif temperature.units == c.FARENHEIT:  return (t - c.C_TO_K) * 9/5 + 32
         elif temperature.units == c.KELVIN:     return t
         else:                                   return None
+
     if n_mols.value == c.UNK:
+        print(temperature)
         return (R * t) / (p * v)
+
     return None
 
 
@@ -193,7 +195,7 @@ INTENTS_TO_HANDLERS = {
     c.ATOMIC_WEIGHT: handle_atomic_weight,
     c.OX_STATES: handle_ox_states,
     c.ELEM_USES: handle_elem_uses,
-    c.IDEAL_GAS: handle_IDEAL_GAS,
+    c.IDEAL_GAS: handle_ideal_gas,
     c.STOICH: handle_stoich
 }
 
@@ -236,6 +238,15 @@ def calculate_output(watson_data):
 #     c.INTENT: c.ELEM_USES,
 #     c.VARS: {
 #         c.ELEMENT: 'Nickel'
+#     }
+# }
+# user_inputs = {
+#     c.INTENT: c.IDEAL_GAS,
+#     c.VARS: {
+#         c.PRESSURE: c.Measurement(3.5, c.ATM),
+#         c.VOLUME: c.Measurement(1, c.MILILITERS),
+#         c.NMOLS: c.Measurement(12, 'unitless'),
+#         c.TEMPERATURE: c.Measurement(c.UNK, c.FARENHEIT)
 #     }
 # }
 

@@ -38,16 +38,20 @@ KG = 'kg'
 POUNDS = 'pounds'
 
 PRESSURE = 'pressure'
+PRESSURE_UNITS = 'pressure_units'
 ATM = 'atm'
+PA = 'pa'
 KPA = 'kpa'
 MMHG = 'mmhg'
 
 TEMPERATURE = 'temperature'
+TEMPERATURE_UNITS = 'temperature_units'
 KELVIN = 'kelvin'
 CELSIUS = 'celsius'
 FARENHEIT = 'farenheit'
 
 VOLUME = 'volume'
+VOLUME_UNITS = 'volume_units'
 LITERS = 'liters'
 MILILITERS = 'ml'
 GALLONS = 'gallons'
@@ -57,8 +61,9 @@ REAGENTS = 'reagents'
 PRODUCTS = 'products'
 
 ## unit conversions - if converting in opposite direction, simply divide instead of multiply
-PA_TO_ATM = 1 / 101325
-KPA_TO_ATM = PA_TO_ATM * 1000
-PA_TO_KPA = 1 / 1000
-ML_TO_L = 1 / 1000
+PA_TO_ATM = 1. / 101325.
+KPA_TO_ATM = PA_TO_ATM * 1000.
+PA_TO_KPA = 1. / 1000.
+ML_TO_L = 1. / 1000.
+GAL_TO_L = 3.78541
 C_TO_K = 273.15 # add instead of multiply

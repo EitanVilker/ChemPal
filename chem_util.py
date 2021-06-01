@@ -10,6 +10,8 @@ and conversion functions.
 PARSING FUNCTIONS
 The parsing functions take strings representing chemicals (either by name or 
 by chemical formula), and return Python objects representing those chemicals.
+parse_chemical() generalizes the behavior of parse_chemical_name() and 
+parse_chemical_formula() and so should be favored when format is unknown.
 
 PubChemPy format:
 - Provides API for searching compounds by name in a large, publicly available

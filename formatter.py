@@ -15,10 +15,10 @@ def format(result):
         variables[c.ELEMENT] = result[c.VARS][c.WATSON_ELEM]
 
     elif result[c.INTENT] == c.INTENT:
-        variables[c.PRESSURE] = c.Measurement(result[c.VARS][c.PRESSURE], result[c.VARS][c.PRESSURE_UNITS])
-        variables[c.VOLUME] = c.Measurement(result[c.VARS][c.VOLUME], result[c.VARS][c.VOLUME_UNITS])
-        variables[c.TEMPERATURE] = c.Measurement(result[c.VARS][c.TEMPERATURE], result[c.VARS][c.TEMPERATURE_UNITS])
-        variables[c.N_MOLS] = c.Measurement(result[c.VARS][c.PRESSURE], result[c.VARS][c.PRESSURE_UNITS])
+        variables[c.PRESSURE] = c.Measurement(float(result[c.VARS][c.PRESSURE]), result[c.VARS][c.PRESSURE_UNITS])
+        variables[c.VOLUME] = c.Measurement(float(result[c.VARS][c.VOLUME]), result[c.VARS][c.VOLUME_UNITS])
+        variables[c.TEMPERATURE] = c.Measurement(float(result[c.VARS][c.TEMPERATURE]), result[c.VARS][c.TEMPERATURE_UNITS])
+        variables[c.N_MOLS] = c.Measurement(float(result[c.VARS][c.PRESSURE]), result[c.VARS][c.PRESSURE_UNITS])
         
     elif result[c.INTENT] == "AskingStoichiometry":  # assumes that at least one reagent and one product are provided
         variables[c.REAGENTS] [result[c.VARS][c.WATSON_REAGENT0]] 

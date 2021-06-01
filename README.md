@@ -24,8 +24,11 @@ https://pypi.org/project/mendeleev/
 
 ### Example queries
 1.What are the possible oxidation states of manganese?
+
 2.What is the element uses of manganese?
+
 3.What is the atomic mass of H2O?
+
 4.Stoichiometry calculation
 * Q: what is the first reactant?
 	A: H2

@@ -2,7 +2,7 @@ import json
 from ibm_watson import AssistantV2
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from calculate_output import calculate_output
-from handler import handle
+from formatter import format
 
 API_KEY = "eV6IqpY5KaKIWRgw5XRk94hR6DC5fYCxaDX1nNIJz3iT"
 ASSISTANT_ID = "eb2dc57e-dc4d-475e-95bc-c7b646dbe09c" 

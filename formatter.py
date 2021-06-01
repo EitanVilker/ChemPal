@@ -1,6 +1,6 @@
 
 # Input result is a dict
-def handle(result):
+def format(result):
     new_result = {}
     variables = []
     if result["intent"] == "AskingMass":

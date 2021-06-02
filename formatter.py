@@ -4,7 +4,8 @@ import constants as c
 def format(result):
     new_result = {}
     variables = {}
-    if not (c.INTENT in result and c.VARS in result):
+    if (not (c.INTENT in result and c.VARS in result)) \
+            or (c.INTENT == c.STOICH and c.PRODUCTS not in result[c.VARS]):
         return None
 
     if result[c.INTENT] == c.ATOMIC_MASS:

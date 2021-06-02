@@ -88,25 +88,38 @@ try:
         ### Calculate output
         if formatted_result:
             try:
+                print(formatted_result)
                 calculation_output = calculate_output(formatted_result)
             
                 if calculation_output:
                     print(calculation_output)
-            except ValueError as e:
-                if should_raise:
-                    should_raise = False
-                    raise e
-                should_raise = True
+                else:
+                    intent = formatted_result[c.INTENT]
+                    if intent in [c.ATOMIC_MASS, c.OX_STATES, c.ELEM_USES]:
+                        inputs = formatted_result['variables']
+                        if len(formatted_result['variables']):
+                            print(f'Unable to handle {intent} with inputs {formatted_result}')
+                        else:
+                            print(f'Watson Assistant was unable to parse your inputs for chemicals for {intent}, please try another query.')
 
+            except ValueError as e:
+                if formatted_result[c.INTENT] == c.STOICH:
+                    if len(formatted_result[c.PRODUCTS] > 1):
+                        print(f'Unable to handle stoichiometry with reagents {formatted_result[c.REAGENTS]} and products {formatted_result[c.PRODUCTS]}')
+                else:
+                    raise e
+        
         ### clear variables if the calculation is completed
-        if output:
+        if calculation_output:
             if "generic" in output and len(output["generic"]) > 0:
-                if output["generic"][0]["response_type"] and output["generic"][0]["response_type"] == "text":
+                print(output['generic'])
+                if "response_type" in output["generic"][0] and output["generic"][0]["response_type"] == "text":
                     if "calculating" in output["generic"][0]["text"].lower():
                         result = {}
                         result[c.INTENT] = ""
                         result[c.VARS] = {}
-                        print('\nIs there anything else I can help you with?')
+                        # print(output['generic'][0]['text'])
+                        # print('\nIs there anything else I can help you with?')
                     else:
                         print(output["generic"][0]["text"])
 
